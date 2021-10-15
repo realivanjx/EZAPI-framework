@@ -9,4 +9,5 @@
         public const INVALID_JSON_FORMAT = "invalid Json format";
         public const INVALID_HTTP_RESPONSE_CODE = "invalid HTTP response code";
         public const INVALID_CONTENT_TYPE = "invalid content type";
+        public const INVALID_KEY_OR_LOCALE = "invalid key or locale";
     }

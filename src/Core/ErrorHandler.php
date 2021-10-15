@@ -2,7 +2,7 @@
   namespace Core;
 
 
-  class Error 
+  class ErrorHandler 
   {
     //in progress
     public static function handler($ex)

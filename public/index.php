@@ -1,7 +1,7 @@
 <?php
     namespace EZAPIFRAMEWORK;
     use Core\Dispatch;
-    use Core\Error;
+    use Core\ErrorHandler;
     use \Exception;
     
 
@@ -49,5 +49,5 @@
     }
     catch(Exception $ex)
     {
-        Error::handler($ex);
+        ErrorHandler::handler($ex);
     }
