@@ -1,10 +1,10 @@
 <?php
     namespace Core;
     use \Config;
-    use \Exception;
     use Core\EZENV;
     use Core\Dictionary;
-
+    use Core\Exceptions\ApiError;
+    
 
     class Dispatch
     {
@@ -51,7 +51,7 @@
             */
             if(!class_exists($route) || !method_exists($route, $method))
             {
-                throw new Exception(Dictionary::httpResponseCode[400]);
+                throw new ApiError(Dictionary::httpResponseCode[400]);
             }
 
               /**
@@ -60,6 +60,9 @@
              */
             $run = new $route();
 
+            /**
+             * Execute the called method
+             */
             $run->$method();
         }
     }

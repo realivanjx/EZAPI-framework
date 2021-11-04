@@ -1,7 +1,9 @@
 <?php
     namespace Core\Languages;
     use Core\Constant;
+    use Core\Cookie;
     use Core\Languages\Languages;
+    use Core\Exceptions\apiError;
 
     class Translator
     {
@@ -16,7 +18,19 @@
 
             $this->_config = Languages::config;
 
-            $this->_locale = EZENV["DEFAULT_LOCALE"];
+            #Set locale
+            if(Cookie::exists("locale"))
+            {
+                $this->_locale = Cookie::get("locale");
+            }
+            else
+            {
+                #Assign value
+                $this->_locale = EZENV["DEFAULT_LOCALE"];
+
+                #set locale
+                $this->setLocale(EZENV["DEFAULT_LOCALE"]);
+            }
         }
 
         /**
@@ -60,13 +74,30 @@
 
         public function currentLocale() : string
         {
+            if(Cookie::exists("locale"))
+            {
+                return Cookie::get("locale");
+            }
+
             return $this->_locale;
         }
 
-        public function setLocale() : bool
+        public function setLocale($locale) : bool
         {
-            
+            if(!array_key_exists($locale, $this->_config))
+            {
+               throw new apiError (Constant::INVALID_LANGUAGE_LOCALE);
+            }
+
+            #Store preference in a cookie for one year
+            if(Cookie::set("locale", $locale, time() + 31556926))
+            {
+                #set locale value
+                $this->_locale = $locale; 
+
+                return true;
+            }
+
+            return false;
         }
-
-
     }

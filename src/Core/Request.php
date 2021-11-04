@@ -4,6 +4,7 @@
     use Core\Constant;
     use Core\Helper;
     use Core\Dictionary;
+    use Core\Exceptions\ApiError;
 
     class Request
     {
@@ -96,10 +97,14 @@
                 $this->response(495,  [Constant::ERROR => Dictionary::httpResponseCode[495]]);
             }
 
-            #Assign headers
-            foreach($headerValues as $key => $value)
+            #Ensure that headers are not already sent before assigning new headers.
+            if (!headers_sent()) 
             {
-                header("{$key}: {$value}");
+                #Assign headers
+                foreach($headerValues as $key => $value)
+                {
+                    header(sprintf("%s: %s", $key, $value));
+                }
             }
         }
 
@@ -115,6 +120,7 @@
          */
         public function response(int $code, array $response, string $contentType = "json") : void
         {
+
             #Validate response code
             if(!array_key_exists($code, Dictionary::httpResponseCode)) throw new Exception (Constant::INVALID_HTTP_RESPONSE_CODE);
 
@@ -156,7 +162,7 @@
             #Validate Json
             if (json_last_error() !== JSON_ERROR_NONE) 
             {
-                throw new Exception(Constant::INVALID_JSON_FORMAT);
+                throw new ApiError(Constant::INVALID_JSON_FORMAT);
             }
 
             #Sanitize values
@@ -167,5 +173,15 @@
 
             #Return object
             return $results;
+        }
+
+        public function inputGet() : object
+        {
+
+        }
+
+        public function inputPost() : object
+        {
+
         }
     }

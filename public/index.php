@@ -2,6 +2,8 @@
     namespace EZAPIFRAMEWORK;
     use Core\Dispatch;
     use Core\ErrorHandler;
+  
+    
     use \Exception;
     
 
@@ -43,6 +45,7 @@
             }
         });
 
+        
 
         #Dispatch request
         Dispatch::request();

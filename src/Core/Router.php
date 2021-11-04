@@ -2,7 +2,10 @@
   namespace Core;
   use \Exception;   
   use Core\Request;
+  use Core\Constant;
   use Core\Languages\Translator;
+  use Core\Exceptions\ApiError;
+  
 
   class Router 
   {
@@ -13,18 +16,16 @@
 
     public function __construct() 
     {
-        #instantiate response request
-        $this->request = new Request();
+      #instantiate response request
+      $this->request = new Request();
 
-        $this->lang = new Translator();
+      $this->request->headers();
 
-        #To prevent cors issues we load all our headers before dispatching any request.
-        $this->request->headers();
+      $this->lang = new Translator();
     }
 
     public function __destruct()
     {
-        #Remove all headers
-        header_remove(); 
+       
     }
   }
