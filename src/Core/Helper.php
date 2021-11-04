@@ -4,6 +4,16 @@
 
     class Helper
     {
+
+        /**
+         * Check if a string is serialized or not
+         * @method is_serialized
+         * @param string $string
+         */
+        public static function isSerialized(string $string) : bool
+        {
+            return (@unserialize($string) !== false);
+        }
        
         /**
          * @method sanitizeObject

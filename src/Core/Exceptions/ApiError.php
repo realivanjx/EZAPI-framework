@@ -3,6 +3,7 @@
     use Core\Exceptions\ExceptionHandler;
     use Core\Request;
     use Core\Constant;
+    use Core\Helper;
 
     class ApiError extends ExceptionHandler
     {
@@ -10,6 +11,12 @@
         {
             #Construct ExceptionHandler constructor
             parent::__construct();
+
+             #Unserialize
+            if(Helper::isSerialized($errorMessage))
+            {
+                $errorMessage = unserialize($errorMessage);
+            }
             
             #Send Api response
             $this->request->response($httpCode, [Constant::ERROR => $errorMessage]);

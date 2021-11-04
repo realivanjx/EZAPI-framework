@@ -3,6 +3,7 @@
     use Core\DI;
     use Core\Languages\Translator;
     use Core\Database\Mysql;
+    use Core\Database\MysqlQuery;
 
 
     class Model
@@ -10,6 +11,7 @@
         public 
             $di, 
             $db, 
+            $query,
             $lang, 
             $modelVariables;
 
@@ -21,13 +23,15 @@
             {
                 if(!EZENV["PRODUCTION"])
                 {
-                    die("You must add a 'table' variable to the model: {get_class($this)}");
+                    die(sprintf("You must add a 'table' variable to the model: %s", get_class($this)));
                 }
 
                 throw new Exception("You must add a 'table' variable to the model: {get_class($this)}");
             }
          
-            $this->db = new Mysql($this->modelVariables);
+           $this->db = new Mysql($this->modelVariables);
+
+           $this->query = new MysqlQuery($this->db);
 
             #instantiate language 
             $this->lang = new Translator();  

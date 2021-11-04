@@ -46,7 +46,7 @@
         public function setLocale() : void
         {
             #Receive params and sanitize them.
-           $input = $this->request->inputJson(true);
+            $input = $this->request->inputJson(true);
 
             #Change language locale
             if(!$this->lang->setLocale($input->locale))
@@ -62,8 +62,12 @@
         #in progress
         public function login() : void 
         {
+            #Receive params and sanitize them.
+            $inputObject = $this->request->inputJson(true);
 
-           $input = $this->request->inputPost(true);
+            //print_r($this->di); die;
+
+            $response = $this->di->UserModel->login($inputObject);
 
            print_r($input);
         }

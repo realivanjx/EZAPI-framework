@@ -19,6 +19,8 @@
 
                 #Routes
                 "DEFAULT_ROUTE" => "User",
+
+                "CURRENT_TIMEZONE" => "America/New_York",
             ];
 
 
@@ -26,5 +28,8 @@
             {
                 define($key, $value);
             }
+
+            #Define timezone
+            date_default_timezone_set(CURRENT_TIMEZONE);
         }
     }

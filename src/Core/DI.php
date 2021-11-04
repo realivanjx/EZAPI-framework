@@ -69,7 +69,7 @@
                     $alias = explode("use ", $line);
 
                     #Skip exceptions from being instantiated.
-                    if(!empty($alias[1]) && strpos($alias[1], "Core\Exceptions"))
+                    if(!empty($alias[1]) && strpos($alias[1], "Core\Exceptions") === false)
                     {
                         //Remove semicolons and spaces
                         $trace = trim(str_replace(";", "", $alias[1]));
@@ -165,7 +165,7 @@
                 if(in_array('instance', (array) $methodProperty))
                 {
                     #Instantiate classes with methods that contains instances only
-                    $this->initialize[$key] =  new ReflectionMethod($this->initialize[$key]);
+                    $this->initialize[$key] =  new $this->initialize[$key];
                 }
             }
 

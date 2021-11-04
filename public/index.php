@@ -1,7 +1,7 @@
 <?php
     namespace EZAPIFRAMEWORK;
     use Core\Dispatch;
-    use Core\ErrorHandler;
+    use Core\Errors\ErrorHandler;
   
     
     use \Exception;
