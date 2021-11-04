@@ -82,6 +82,9 @@
             return $this->_locale;
         }
 
+        /**
+         * 
+         */
         public function setLocale($locale) : bool
         {
             if(!array_key_exists($locale, $this->_config))

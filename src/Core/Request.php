@@ -27,7 +27,8 @@
         #Allowed HTTP content types
         private $_allowedContentType = [
             "application/json",
-            "application/json; charset=UTF-8"
+            "application/json; charset=UTF-8",
+            "application/x-www-form-urlencoded"
         ];
 
 
@@ -77,6 +78,7 @@
             #Validate content type
             if(isset($_SERVER["CONTENT_TYPE"]) && !in_array($_SERVER["CONTENT_TYPE"], $this->_allowedContentType))
             {
+                die($_SERVER["CONTENT_TYPE"]);
                 $this->response(415, [Constant::ERROR => Dictionary::httpResponseCode[415]]);
             }
 
@@ -175,13 +177,45 @@
             return $results;
         }
 
-        public function inputGet() : object
-        {
 
+        /**
+         * 
+         */
+        public function inputGet(bool $sanitize = false) : object
+        {
+            if(!isset($_GET) || empty($_GET))
+            {
+                throw new ApiError(Constant::INVALID_GET_PARAMETERS);
+            }
+
+            $inputGet = $_GET;
+
+            if($sanitize)
+            {
+                $inputGet = Helper::sanitizeGet($inputGet);
+            }
+
+            return (object)$inputGet;
         }
 
-        public function inputPost() : object
-        {
 
+        /**
+         * 
+         */
+        public function inputPost(bool $sanitize = false) : object
+        {
+            if(!isset($_POST) || empty($_POST))
+            {
+                throw new ApiError(Constant::INVALID_POST_PARAMETERS);
+            }
+
+            $inputPost = $_POST;
+
+            if($sanitize)
+            {
+                $inputPost = Helper::sanitizePost($inputPost);
+            }
+
+            return (object)$inputPost;
         }
     }

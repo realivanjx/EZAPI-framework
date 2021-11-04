@@ -44,6 +44,13 @@
              */    
             $method = !empty($request[0]) && !empty($request[1]) ? $request[1] : 'index';
 
+            #See if parameters are sent with a get request
+            if (strpos($method, "?")) 
+            {
+                #Remove everything after the question marks since they are parameters.
+                $method = strtok($method, "?");
+            }
+            
 
             /*
             * If the class is not found or if the method does not exist in that class

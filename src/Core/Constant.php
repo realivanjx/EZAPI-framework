@@ -12,6 +12,9 @@
         public const INVALID_KEY_OR_LOCALE = "invalid key or locale";
         public const INVALID_LANGUAGE_LOCALE = "invalid language locale";
         public const UNABLE_TO_SET_LOCALE = "unable to set locale";
+        public const INVALID_GET_PARAMETERS = "invalid get parameters";
+        public const INVALID_POST_PARAMETERS = "invalid post parameters";
+        public const UNABLE_TO_FIND_PATH = "unable to find path";
 
         #Responses
         public const MESSAGE = "message";

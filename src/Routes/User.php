@@ -2,8 +2,8 @@
     namespace Routes;
     use Core\Router;
     use Core\Constant;
-    
     use Core\Exceptions\ApiError;
+    use Models\UserModel;
   
 
     class User extends Router
@@ -48,20 +48,25 @@
             #Receive params and sanitize them.
            $input = $this->request->inputJson(true);
 
-
             #Change language locale
             if(!$this->lang->setLocale($input->locale))
             {
                 throw new apiError (Constant::UNABLE_TO_SET_LOCALE);
             }
-            
+
             #Success response
             $this->request->response(200, [Constant::MESSAGE => Constant::SUCCESS]);
         }
 
 
         #in progress
-        public function login() : void {}
+        public function login() : void 
+        {
+
+           $input = $this->request->inputPost(true);
+
+           print_r($input);
+        }
         public function logout() : void {}
         public function info() : void {}
         public function register() : void {}

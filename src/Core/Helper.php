@@ -26,4 +26,14 @@
         
             return $objectData;
         }
+
+        public static function sanitizeGet(array $getData) : array
+        {
+            return filter_input_array(INPUT_GET, $getData, FILTER_SANITIZE_STRING);
+        }
+
+        public static function sanitizePost(array $postData) : array
+        {
+            return filter_input_array(INPUT_POST, $postData, FILTER_SANITIZE_STRING);
+        }
     }
