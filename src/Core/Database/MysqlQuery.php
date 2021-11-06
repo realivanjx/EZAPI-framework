@@ -1,15 +1,14 @@
 <?php
     namespace Core\Database;
+    use Core\Database\Mysql;
+    use \PDO;
 
-
-    class MysqlQuery
+    class MysqlQuery extends Mysql
     {
 
-        private $db;
-
-        public function __construct($db)
+        public function __construct(string $table)
         {
-            $this->db = $db;
+            parent::__construct($table);
         }
 
 
@@ -21,7 +20,7 @@
              */
             public function find(array $array, $table = null) : object
             {
-                return $this->db->select([
+                return $this->select([
                     "where" => key($array) . "= ?",
                     "bind" => [current($array)]
                 ], $table);
@@ -36,7 +35,7 @@
              */
             public function findFirst(array $array, $table = null) : object
             {
-                return $this->db->select([
+                return $this->select([
                     "where" => key($array) . "= ?",
                     "bind" => [current($array)],
                     "limit" => 1
@@ -51,7 +50,7 @@
              */
             public function findLast(array $array, $table = null) : object
             {
-                return $this->db->select([
+                return $this->select([
                     "where" => key($array) . "= ?",
                     "bind" => [current($array)],
                     "limit" => 1,
@@ -69,7 +68,7 @@
              */
             public function search(array $array, int $limit = 30, int $offset = 0, string $order = "id DESC", $table) : array
             {
-                return $this->db->select([
+                return $this->select([
                     "where" => key($array) . " like %?%",
                     "bind" => [current($array)],
                     "limit" => $limit,
@@ -86,7 +85,7 @@
              */
             public function deleteId(int $id, $table = null) : array
             {
-                return $this->db->delete([
+                return $this->delete([
                     "where" => "id = ?", 
                     "bind" => [$id]
                 ], $table);
@@ -99,7 +98,7 @@
              */
             public function deleteBy(array $condition, $table = null) : array
             {
-                return $this->db->delete([
+                return $this->delete([
                     "where" => key($condition) . " = ?", 
                     "bind" => [end($condition)]
                 ], $table);
@@ -154,7 +153,7 @@
                 }
 
                 #Insert values
-                if($this->db->insert($values, $table)) return true;
+                if($this->insert($values, $table)) return true;
 
                 return false;
             }
@@ -196,7 +195,7 @@
 
                 array_push($values, $userId);
 
-                if($this->db->update([
+                if($this->update([
                     "set" => $set,
                     "where" => $this->modelVariables['table'] == "user" || $table == "user" ? "id = ?" : "userId = ?",
                     "bind" => $values
@@ -242,7 +241,7 @@
 
                 array_push($values, end($updateBy));
 
-                if($this->db->update([
+                if($this->update([
                     "set" => $set,
                     "where" => sprintf("%s = ?", key($updateBy)),
                     "bind" => $values
@@ -295,7 +294,7 @@
                 }
     
                 #Insert values
-                if($this->db->insert($values)) return true;
+                if($this->insert($values)) return true;
 
                 return false;
             }

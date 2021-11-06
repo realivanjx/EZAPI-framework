@@ -11,15 +11,13 @@
         public 
             $di, 
             $db, 
-            $query,
-            $lang, 
-            $modelVariables;
+            $lang;
 
         public function __construct() 
         {
-            $this->modelVariables = get_class_vars(get_class($this));
+            $modelVariables = get_class_vars(get_class($this));
 
-            if(!array_key_exists("table", $this->modelVariables))
+            if(!array_key_exists("table", $modelVariables))
             {
                 if(!EZENV["PRODUCTION"])
                 {
@@ -29,9 +27,7 @@
                 throw new Exception("You must add a 'table' variable to the model: {get_class($this)}");
             }
          
-           $this->db = new Mysql($this->modelVariables);
-
-           $this->query = new MysqlQuery($this->db);
+            $this->db = new MysqlQuery($modelVariables["table"]);
 
             #instantiate language 
             $this->lang = new Translator();  
@@ -44,5 +40,7 @@
         public function __destruct()
         {
             $this->di = null;
+            $this->db = null;
+            $this->lang = null;
         }
     }

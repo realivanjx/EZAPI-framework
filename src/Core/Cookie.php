@@ -19,7 +19,7 @@
             string $cookieExpiration, 
             string $path = "/", 
             string $domain = "", 
-            bool $secure = false, 
+            bool $secure = false, //set to true in deployment
             bool $httpOnly = true ) : bool
         {
             if(!empty($name) && !empty($value) && !empty($cookieExpiration)) 

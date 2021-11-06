@@ -65,8 +65,6 @@
             #Receive params and sanitize them.
             $inputObject = $this->request->inputJson(true);
 
-            //print_r($this->di); die;
-
             $response = $this->di->UserModel->login($inputObject);
 
            print_r($input);

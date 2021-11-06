@@ -32,7 +32,7 @@
       $identifier = filter_var($input->username_or_email, FILTER_VALIDATE_EMAIL) ? "email" : "username";
 
       #Attempt to find the user in the database with the username or email provided
-      $user =  $this->query->findFirst([$identifier => $input->username_or_email]);
+      $user =  $this->db->findFirst([$identifier => $input->username_or_email]);
 
       #User not found
       if(empty($user->$identifier))
@@ -43,7 +43,7 @@
       #Invalid password
       if(!password_verify($input->password, $user->password))
       {
-        throw new Exception (serialize(["password" => $this->lang->translate("invalid_password")]));
+       // throw new Exception (serialize(["password" => $this->lang->translate("invalid_password")]));
       }
 
 

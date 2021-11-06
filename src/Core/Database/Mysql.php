@@ -10,9 +10,9 @@
     * @comment Please report any errors so that our team can fix them as soon as possible.
     */
 
-    class Mysql
+    class Mysql 
     {
-        private 
+        public 
             $_conn, 
             $_table, 
             $_lastInsertedId;
@@ -21,13 +21,15 @@
             $dateFormat = "Y-m-d",
             $dateTimeFormat = "Y-m-d H:i:s";
 
-        function __construct(array $modelVariables) 
+        public function __construct(string $table) 
         {
-            $this->_table = $modelVariables['table'];
+            $this->_table = $table;
             
-            if(!empty($this->_conn)) return; //should trhow an exception later
-
-            $this->connect();
+            #Connect to the db only if needed
+            if(empty($this->_conn))
+            {
+                $this->connect();
+            }
         }
 
 
@@ -40,26 +42,25 @@
         {
             try 
             { 
+                $config = [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_CASE => PDO::CASE_NATURAL,
+                    PDO::ATTR_ORACLE_NULLS => PDO::NULL_EMPTY_STRING,
+                    PDO::MYSQL_ATTR_INIT_COMMAND => sprintf(
+                        "SET NAMES %s;SET time_zone ='%s'", 
+                        "utf8", 
+                        CURRENT_TIMEZONE
+                    )#set timezone to match the default framework timezone
+                ];
+
                 $this->_conn = new PDO(sprintf(
                     "mysql:host=%s;dbname=%s", 
                     EZENV['DB_HOST'], 
                     EZENV['DB_NAME']),  
                     EZENV['DB_USER'], 
-                    EZENV['DB_PASSWORD']
+                    EZENV['DB_PASSWORD'],
+                    $config
                 );
-
-                $this->_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $this->_conn->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL); #Use default column names
-                $this->_conn->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_EMPTY_STRING);#Convert empty strings to null by default
-                $this->_conn->setAttribute(
-                    PDO::MYSQL_ATTR_INIT_COMMAND, 
-                    sprintf(
-                        "SET NAMES %s;SET time_zone ='%s'", 
-                        "utf8", 
-                        CURRENT_TIMEZONE
-                    )
-                ); #set timezone to match the default framework timezone
-                
             }
             catch(PDOException $e)
             {

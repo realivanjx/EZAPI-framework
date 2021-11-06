@@ -39,10 +39,6 @@
                 "en_US" => "Invalid password",
                 "es_US" => "Contraseña invalida"
             ],
-
-            
-
-            
         ];
     }
         
