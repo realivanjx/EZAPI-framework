@@ -1,7 +1,6 @@
 <?php
     namespace Core;
 
-
     class Constant
     {
         #Errors

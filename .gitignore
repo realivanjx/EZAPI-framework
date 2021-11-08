@@ -1,3 +1,7 @@
 # Ignore
 .env.development
 .env.production
+notes
+composer.json
+composer.lock
+/vendor/

@@ -24,28 +24,38 @@
 
     try
     {
-        #Autoload
-        spl_autoload_register(function ($className)
+        #Composer path
+        $composerPath = sprintf("%s%svendor%sautoload.php", dirname(__DIR__, 1), DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
+
+        #Verify composer autoload
+        if(file_exists($composerPath))
         {
-            $fileName = sprintf(
-                "%s%ssrc%s%s.php", 
-                dirname(__DIR__),  
-                DIRECTORY_SEPARATOR, 
-                DIRECTORY_SEPARATOR, 
-                str_replace("\\", DIRECTORY_SEPARATOR, $className)
-            );
-
-            if (file_exists($fileName))
+            require_once($composerPath);
+        }
+        else
+        {
+            #Native Autoload
+            spl_autoload_register(function ($className)
             {
-                require ($fileName);
-            }
-            else
-            {
-                throw new Exception("Class not found: {$fileName}");
-            }
-        });
+                $fileName = sprintf(
+                    "%s%ssrc%s%s.php", 
+                    dirname(__DIR__),  
+                    DIRECTORY_SEPARATOR, 
+                    DIRECTORY_SEPARATOR, 
+                    str_replace("\\", DIRECTORY_SEPARATOR, $className)
+                );
 
-        
+                if (file_exists($fileName))
+                {
+                    require ($fileName);
+                }
+                else
+                {
+                    throw new Exception("Class not found: {$fileName}");
+                }
+            });
+        }
+
 
         #Dispatch request
         Dispatch::request();

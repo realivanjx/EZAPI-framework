@@ -1,6 +1,6 @@
 <?php
     namespace Core;
-    use \Config;
+    use Core\Config;
     use Core\EZENV;
     use Core\Dictionary;
     use Core\Exceptions\ApiError;
