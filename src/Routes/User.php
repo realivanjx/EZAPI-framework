@@ -59,7 +59,35 @@
         }
 
 
+        /**
+         * @method register
+         * @param object ex:  {fname: value, lname: value, username: value, email: value, password: value, confirmPassword: value}
+         * @return object
+         * @throws exceptions
+         */
+        public function register() : void 
+        {
+            #Receive params and sanitize them.
+            $inputObject = $this->request->inputJson(true);
+
+            #Attempt to register
+            $response = $this->di->UserModel->register($inputObject);
+
+            #OTP sent
+            if($response === Constant::OTP_SENT)
+            {
+                $this->request->response(200, ["OTP" => $response]);
+            }
+
+            #Success response
+            $this->request->response(200, [Constant::MESSAGE => $response]);
+        }
+
+
         #in progress
+        public function activateAccount() : void {}
+
+
         public function login() : void 
         {
             #Receive params and sanitize them.
@@ -71,7 +99,7 @@
         }
         public function logout() : void {}
         public function info() : void {}
-        public function register() : void {}
+        
         public function resetPsw() : void {}
         public function update() : void {}
         public function extend() : void {}

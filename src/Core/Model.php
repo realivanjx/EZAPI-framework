@@ -15,7 +15,7 @@
 
         public function __construct() 
         {
-            $modelVariables = get_class_vars(get_class($this));
+            (array)$modelVariables = get_class_vars(get_class($this));
 
             if(!array_key_exists("table", $modelVariables))
             {
@@ -35,6 +35,31 @@
             #Inject Dependencies
             $dependencyInjection = new DI();
             $this->di =  $dependencyInjection->load(get_called_class());
+        }
+
+         /**
+         * @method assign
+         * @param object object
+         * @comment: Used to assign values to all of the variables in a model.
+         */
+        public function assign(object $object) : void 
+        {
+            $variables = [];
+
+            foreach($object as $key => $value) 
+            {
+                if(property_exists($this, $key))
+                {
+                    #Assign values to its parent class
+                    $this->$key = $value;
+                    
+                    #save values
+                    $variables[$key] = $value;
+                }
+            }
+
+            #Assign variables to the database class
+            $this->db->modelVariables = $variables;
         }
 
         public function __destruct()

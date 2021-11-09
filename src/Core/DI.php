@@ -152,17 +152,17 @@
             }
 
             //Add all the methods to the main array
-            $this->initialize['methods'] = (object) $methodList;
+            $this->initialize["methods"] = (object) $methodList;
            
             //attepmt to intantiate
-            foreach($this->initialize['methods'] as $key => $methodProperty)
+            foreach($this->initialize["methods"] as $key => $methodProperty)
             {
                 /**
                  * Only if the class contains methods with instance we initialize that class otherwise we 
                  * skip that class for performance since instantiation is not needed. It is indeed recommented
                  * to create static methods  classes serparated from instance methods classes.
                  */
-                if(in_array('instance', (array) $methodProperty))
+                if(in_array("instance", (array) $methodProperty))
                 {
                     #Instantiate classes with methods that contains instances only
                     $this->initialize[$key] =  new $this->initialize[$key];
@@ -170,6 +170,6 @@
             }
 
             //Unset methods from the array.
-            unset($this->initialize['methods']);
+            unset($this->initialize["methods"]);
         }
     }

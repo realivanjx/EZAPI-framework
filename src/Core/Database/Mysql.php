@@ -14,7 +14,7 @@
     {
         public 
             $_conn, 
-            $_table, 
+            $table, 
             $_lastInsertedId;
 
         public 
@@ -23,7 +23,7 @@
 
         public function __construct(string $table) 
         {
-            $this->_table = $table;
+            $this->table = $table;
             
             #Connect to the db only if needed
             if(empty($this->_conn))
@@ -82,7 +82,7 @@
          */
         public function insert(array $rows, string $table = null) : bool
         {
-            $table = !empty($table) ? $table : $this->_table;
+            $table = !empty($table) ? $table : $this->table;
 
             $setValues = null;
         
@@ -130,7 +130,7 @@
          */
         public function select(array $conditions, string $table = null) : object
         {
-            $table = !empty($table) ? $table : $this->_table;
+            $table = !empty($table) ? $table : $this->table;
             $errors = [];
 
             //VALIDATIONS
@@ -202,7 +202,7 @@
          */
         public function delete(array $conditions, string $table = null) : array
         {
-            $table = !empty($table) ? $table : $this->_table;
+            $table = !empty($table) ? $table : $this->table;
             $errors = [];
 
             //VALIDATIONS
@@ -259,7 +259,7 @@
          */
         public function update(array $conditions, string $table = null) : array
         {
-            $table = !empty($table) ? $table : $this->_table;
+            $table = !empty($table) ? $table : $this->table;
             $errors = [];
 
             //VALIDATIONS
@@ -321,7 +321,7 @@
          */
         public function query(array $conditions, string $table = null) : array
         {
-            $table = !empty($table) ? $table : $this->_table;
+            $table = !empty($table) ? $table : $this->table;
             $errors = [];
 
             //VALIDATIONS
@@ -392,7 +392,7 @@
          */
         public function tableColumns(string $table = null) : array
         {
-            $table = !empty($table) ? $table : $this->_table;
+            $table = !empty($table) ? $table : $this->table;
 
             $query =  "SHOW COLUMNS FROM {$table}";
 
@@ -425,7 +425,7 @@
         {
             (array) $tableType = [];
 
-            (string) $table = !empty($table) ? $table : $this->_table;
+            (string) $table = !empty($table) ? $table : $this->table;
 
             (string) $query =  "SHOW COLUMNS FROM {$table}";
 

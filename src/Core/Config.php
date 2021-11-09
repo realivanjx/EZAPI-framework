@@ -19,7 +19,9 @@
                 #Routes
                 "DEFAULT_ROUTE" => "User",
 
+                #date
                 "CURRENT_TIMEZONE" => "America/New_York",
+                "TIMESTAMP" => date("Y-m-d H:i:s")
             ];
 
 
