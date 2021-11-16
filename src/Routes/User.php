@@ -4,6 +4,9 @@
     use Core\Constant;
     use Core\Exceptions\ApiError;
     use Models\UserModel;
+
+
+    use Core\OTP;
   
 
     class User extends Router
@@ -85,7 +88,18 @@
 
 
         #in progress
-        public function activateAccount() : void {}
+        public function activateAccount() : void 
+        {
+            
+
+           $test = OTP::get(5);
+
+           echo "done get";
+
+           $test2 = OTP::validate(5, $test);
+
+           print_r($test2); die;
+        }
 
 
         public function login() : void 

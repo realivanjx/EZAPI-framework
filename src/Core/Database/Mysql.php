@@ -200,28 +200,22 @@
          * @return array
          * @throws exceptions
          */
-        public function delete(array $conditions, string $table = null) : array
+        public function delete(array $conditions, string $table = null) : bool
         {
             $table = !empty($table) ? $table : $this->table;
-            $errors = [];
 
             //VALIDATIONS
             if(array_key_exists('where', $conditions))
             {
                 if(!array_key_exists('bind', $conditions))
                 {
-                    $errors['bind'] = "You must bind your values";
+                    throw new Exception ("You must bind your values");
                 }
 
                 if(!strpos($conditions['where'], "?"))
                 {
-                    $errors['where'] = "Your condition must end with a ?";
+                    throw new Exception ("Your condition must end with a ?");
                 }
-            }
-
-            if(!empty($errors))
-            {
-                return $errors;
             }
            
             $query = "DELETE FROM {$table} WHERE {$conditions['where']}";
@@ -238,7 +232,7 @@
 
             if($stmt->execute())
             {
-                return ["message" => Constant::SUCCESS];
+               return true;
             }
 
             if(!EZENV["PRODUCTION"] && $stmt->error)
@@ -246,7 +240,7 @@
                 throw new Exception($stmt->error);
             }
 
-            return [];
+            return false;
         }
 
 

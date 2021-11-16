@@ -15,6 +15,8 @@
         public const INVALID_GET_PARAMETERS = "invalid get parameters";
         public const INVALID_POST_PARAMETERS = "invalid post parameters";
         public const UNABLE_TO_FIND_PATH = "unable to find path";
+        public const INVALID_OTP = "invalid OTP";
+        public const OTP_EXPIRED = "OTP expired";
         
 
         #Responses

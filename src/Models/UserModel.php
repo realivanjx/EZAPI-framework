@@ -2,7 +2,10 @@
   namespace Models;
   use \Exception;
   use Core\Model;
+  use Core\Cookie;
   use Core\Constant;
+  use Core\OTP;
+  use Core\Mail\Mail;
   use Core\Exceptions\ApiError;
     
 
@@ -17,9 +20,9 @@
       $username, // varchar(100)
       $email, // varchar(150)
       $password, // varchar(150)
-      $status = EZENV["ENFORCE_EMAIL_VALIDATION"] ? 1 : 2, #Active by default,
+      $status = 2, #inactive by default,
       $role = "USER",
-      $locale, //varchar(10)
+      $locale = EZENV["DEFAULT_LOCALE"], //varchar(10)
       $twoFactorAuth, //tinyint(1)
       $createdAt, //timestamp
       $updatedAt, //timestamp
@@ -105,37 +108,40 @@
 
       if(!empty($validation)) throw new ApiError (serialize($validation));
 
-
-      //check if locale cookie is set and assign its value
-
       #assign values
       $this->assign($input);
+
+      #check if the locale cookie is set and assign its value
+      if(Cookie::exists("locale"))
+      {
+        $this->locale = Cookie::get("locale");
+      }
 
       #save record
       if(!$this->db->save())
       {
         throw new ApiError (Constant::ERROR_MESSAGE);
       }
-
-      #Assign user id
-      $this->id = $this->db->lastInsertedId();
           
       #By default email validation is enable
       if(EZENV["ENFORCE_EMAIL_VALIDATION"])
       {
-        // #Send OTP email
-        // Mail::sendOtpToken(
-        //   $this->username,
-        //   $this->email,
-        //   Token::get($this->id) #Get a new token
-        // );
+        #Get an OTP to validate email
+        $otp = OTP::get($this->db->lastInsertedId());
+
+        #Send OTP email
+        Mail::sendOTP(
+          $this->fName,
+          $this->email,
+          $otp
+        );
         
         #Registration susccessful, now Validate the OTP token
         return Constant::OTP_SENT;
       }
 
-    //   #Registration susccessful
-        return Constant::SUCCESS;
-     }
+      #Registration susccessful
+      return Constant::SUCCESS;
+    }
 
   }
