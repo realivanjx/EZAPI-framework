@@ -6,7 +6,7 @@
     use Models\UserModel;
 
 
-    use Core\OTP;
+    use Core\Mail\HtmlCompiler;
   
 
     class User extends Router
@@ -92,14 +92,25 @@
         {
             
 
-           $test = OTP::get(5);
+          
 
-           echo "done get";
+           $arr = [
+               "locale" => "en",
+               "charset" => "UTF-8",
+            "title" => "you suck",
+            "body" => "your body",
+            "preHeader" => "preheader",
+            "content" => "sucks very bad",
+            "year"=> "2021"
+           ];
 
-           $test2 = OTP::validate(5, $test);
 
-           print_r($test2); die;
+           $compiled = HtmlCompiler::run(sprintf("%s\Core\Mail\Templates\DefaultTemplate.html", SRC_DIR), $arr);
+
+         
+           print_r($compiled); die;
         }
+        
 
 
         public function login() : void 
