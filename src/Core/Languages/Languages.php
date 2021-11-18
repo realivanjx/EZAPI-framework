@@ -18,6 +18,10 @@
         ];
 
         public const list = [
+            "hello" => [
+                "en_US" => "Hello",
+                "es_US" => "Hola"
+            ],
             "hello_world" => [
                 "en_US" => "Hello world",
                 "es_US" => "Hola mundo"
@@ -95,21 +99,17 @@
                 "en_US" => "Your passwords do not match",
                 "es_US" => "Sus contraseñas no coinciden"
             ],
-            "" => [
-                "en_US" => "",
-                "es_US" => ""
+            "below_is_your_code" => [
+                "en_US" => "Below is your one-time verification code",
+                "es_US" => "Aqui esta su código de verificación de un solo uso"
             ],
-            "" => [
-                "en_US" => "",
-                "es_US" => ""
+            "if_you_are_having_trouble" => [
+                "en_US" => "If you are having any issues with your account, please don't hesitate to contact us.",
+                "es_US" => "Si tiene algún problema con su cuenta, no dude en ponerse en contacto con nosotros."
             ],
-            "" => [
-                "en_US" => "",
-                "es_US" => ""
-            ],
-            "" => [
-                "en_US" => "",
-                "es_US" => ""
+            "verification_code" => [
+                "en_US" => "One time password",
+                "es_US" => "Token de verificación de un solo uso"
             ],
             "" => [
                 "en_US" => "",

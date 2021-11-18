@@ -13,6 +13,8 @@
          * @return string html content
          * @throws exceptions 
          * @comment: Use this function to compile html pages with dynamic variables.
+         * @How to use: Add @@variable@@ to your html anywhere you need it.
+         * @note: Do not add anyspaces to the variables to prevent errors.
          */
         public static function run(string $filePath, array $parameters) : string
         {

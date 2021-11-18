@@ -17,6 +17,8 @@
         public const UNABLE_TO_FIND_PATH = "unable to find path";
         public const INVALID_OTP = "invalid OTP";
         public const OTP_EXPIRED = "OTP expired";
+        public const UNABLE_TO_SEND = "Unable to send email";
+        PUBLIC CONST UNABLE_TO_SEND_OTP = "Unable to send OTP to this email address";
         
 
         #Responses

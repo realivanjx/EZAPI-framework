@@ -130,11 +130,18 @@
         $otp = OTP::get($this->db->lastInsertedId());
 
         #Send OTP email
-        Mail::sendOTP(
-          $this->fName,
-          $this->email,
-          $otp
-        );
+        try
+        {
+          $this->di->Mail->sendOTP(
+            $this->fName,
+            $this->email,
+            $otp
+          );
+        }
+        catch(Exception $ex)
+        {
+          throw new ApiError (Constant::UNABLE_TO_SEND_OTP);
+        }
         
         #Registration susccessful, now Validate the OTP token
         return Constant::OTP_SENT;
@@ -143,5 +150,4 @@
       #Registration susccessful
       return Constant::SUCCESS;
     }
-
   }

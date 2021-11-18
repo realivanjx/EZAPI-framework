@@ -6,7 +6,7 @@
     use Models\UserModel;
 
 
-    use Core\Mail\HtmlCompiler;
+    use Core\Mail\Mail;
   
 
     class User extends Router
@@ -90,25 +90,10 @@
         #in progress
         public function activateAccount() : void 
         {
+            #Receive params and sanitize them.
+            $inputObject = $this->request->inputJson(true);
+
             
-
-          
-
-           $arr = [
-               "locale" => "en",
-               "charset" => "UTF-8",
-            "title" => "you suck",
-            "body" => "your body",
-            "preHeader" => "preheader",
-            "content" => "sucks very bad",
-            "year"=> "2021"
-           ];
-
-
-           $compiled = HtmlCompiler::run(sprintf("%s\Core\Mail\Templates\DefaultTemplate.html", SRC_DIR), $arr);
-
-         
-           print_r($compiled); die;
         }
         
 
