@@ -1,0 +1,22 @@
+#Official documentation about apache htaccess https://httpd.apache.org/docs/2.4/howto/htaccess.html
+
+#Redirect all trafic to the public directory
+RewriteEngine on
+RewriteCond %{REQUEST_URI} !^public
+RewriteRule ^(.*)$ public/$1 [L]
+
+#Disable directory indexes and browsing
+Options All -Indexes
+
+# Block sensitive files from the browser. Since this is a server we do not need to serve any frontend purpose.
+<Files ~ "\.(env|env.development|env.production|env.example|json|md|gitignore|gitattributes|lock|html|css|png|jpeg|jpg|pdf)$">
+    Order allow,deny
+    Deny from all
+</Files>
+
+#Secure directory by disabling script execution
+AddHandler cgi-script .pl .py .jsp .asp .htm .shtml .sh .cgi
+Options -ExecCGI
+
+#Protect against DOS attacks by limiting file upload size
+LimitRequestBody 10240000

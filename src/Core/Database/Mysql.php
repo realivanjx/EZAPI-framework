@@ -53,6 +53,7 @@
                     )#set timezone to match the default framework timezone
                 ];
 
+
                 $this->_conn = new PDO(sprintf(
                     "mysql:host=%s;dbname=%s", 
                     EZENV['DB_HOST'], 
