@@ -19,6 +19,6 @@
             }
             
             #Send Api response
-            $this->request->response($httpCode, [Constant::ERROR => $errorMessage]);
+            $this->request->jsonResponse($httpCode, [Constant::ERROR => $errorMessage]);
         }
     }

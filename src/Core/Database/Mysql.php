@@ -39,7 +39,7 @@
          * Database connection.
          */
         protected function connect() : void
-        {
+        {return;
             try 
             { 
                 $config = [

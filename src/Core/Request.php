@@ -41,7 +41,8 @@
             #Validate against empty origin values while in production mode
             if(!isset($_SERVER["HTTP_ORIGIN"]) && EZENV["PRODUCTION"])
             {
-                $this->response(400, [Constant::ERROR => Dictionary::httpResponseCode[400]]);
+                print_r($_SERVER["REMOTE_ADDR"]); die;
+                $this->jsonResponse(400, [Constant::ERROR => Dictionary::httpResponseCode[400]]);
             }
 
             #Bypass HTTP_ORIGIN while in development mode by assigning the local IP address to the Origin.
@@ -53,20 +54,20 @@
             #Validate origins even while in development mode.
             if (!in_array($_SERVER["HTTP_ORIGIN"], ALLOWED_ORIGINS) && !ALLOW_ANY_API_ORIGIN)
             {
-                $this->response(400, [Constant::ERROR => Dictionary::httpResponseCode[400]]);
+                $this->jsonResponse(400, [Constant::ERROR => Dictionary::httpResponseCode[400]]);
             }
 
             #Validate request method
             if(isset($_SERVER["REQUEST_METHOD"]) && !in_array($_SERVER["REQUEST_METHOD"], $this->_allowedMethods))
             { 
                 #method not allowed
-                $this->response(405, [Constant::ERROR => Dictionary::httpResponseCode[405]]);
+                $this->jsonResponse(405, [Constant::ERROR => Dictionary::httpResponseCode[405]]);
             }
 
             #Make sure content type is present while in production mode.
             if (!isset($_SERVER["CONTENT_TYPE"]) && EZENV["PRODUCTION"])
             {
-                $this->response(415, [Constant::ERROR => Dictionary::httpResponseCode[415]]);
+                $this->jsonResponse(415, [Constant::ERROR => Dictionary::httpResponseCode[415]]);
             }
 
             #Overwrite Content type in development mode to JSON by default.
@@ -79,7 +80,7 @@
             if(isset($_SERVER["CONTENT_TYPE"]) && !in_array($_SERVER["CONTENT_TYPE"], $this->_allowedContentType))
             {
                 die($_SERVER["CONTENT_TYPE"]);
-                $this->response(415, [Constant::ERROR => Dictionary::httpResponseCode[415]]);
+                $this->jsonResponse(415, [Constant::ERROR => Dictionary::httpResponseCode[415]]);
             }
 
             #Build header array
@@ -120,7 +121,7 @@
          * @throws Exceptions
          * @see Core\Dictionary for the list of content types  or http response codes
          */
-        public function response(int $code, array $response, string $contentType = "json") : void
+        public function jsonResponse(int $code, array $response, string $contentType = "json") : void
         {
 
             #Validate response code
@@ -147,13 +148,14 @@
         }
 
 
+
         /**
          * @method inputJson
          * @param bool sanitize (obtional) false by default
          * @return object
          * @throws Exception
          */
-        public function inputJson(bool $sanitize = false) : object
+        public function jsonInput(bool $sanitize = false) : object
         {
             #Get params 
             $input = file_get_contents("php://input");
@@ -181,7 +183,7 @@
         /**
          * 
          */
-        public function inputGet(bool $sanitize = false) : object
+        public function getInput(bool $sanitize = false) : object
         {
             if(!isset($_GET) || empty($_GET))
             {
@@ -202,7 +204,7 @@
         /**
          * 
          */
-        public function inputPost(bool $sanitize = false) : object
+        public function postInput(bool $sanitize = false) : object
         {
             if(!isset($_POST) || empty($_POST))
             {

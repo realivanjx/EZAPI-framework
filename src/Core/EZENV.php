@@ -1,6 +1,7 @@
 <?php
     namespace Core;
     use \SplFileObject;
+    use Core\Helper;
 
     class EZENV
     {
@@ -15,13 +16,31 @@
             $fileName = ".env.production";
             $production = true; #it is always a good idea to know in which mode we are working.
 
-            #Validate if the server is in production or development.
-            if($_SERVER["REMOTE_ADDR"] === "127.0.0.1"  || $_SERVER["REMOTE_ADDR"] === "::1" && $_SERVER["SERVER_NAME"] === "localhost")
+            $localhost = [
+                "127.0.0.1",
+                "::1"
+            ];
+
+            #Get public IP
+            $publicIP = Helper::publicIP();
+
+            #Get local ip
+            $localIP = getHostByName(getHostName());
+
+            /**
+             * While using xammp the ip address is usually 127.0.0.1 or ::1 but while using docker 
+             * the ip address becomes something like this 192.168.176.1 and the http request also has a different
+             * local ip number at the end. for this reason to validate the ip address in docker we remove the last .number
+             * example in xampp would be the same public and local ip 127.0.0.1 but in docker it would be 192.168.176.x and
+             * 192.168.176.+x for this reason we use a substring validation method to be able to support both enviroments.
+             */
+            if(in_array($publicIP, $localhost) || substr($publicIP, 0, -2) === substr($localIP, 0, -2))
             {
                 $fileName = ".env.development";
 
                 $production = false;
             }
+            
 
             #Open the .env file and read it
             $dotEnvFile = new SplFileObject(
@@ -31,6 +50,7 @@
                     $fileName
                 )
             );
+
 
             #contains the parse values
             $env = [];

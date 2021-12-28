@@ -7,10 +7,17 @@
   use Core\OTP;
   use Core\Mail\Mail;
   use Core\Exceptions\ApiError;
-    
+  
+
+  //polymorphism
+  interface IUserModel
+  {
+    public function login(object $input) : string;
+    public function register(object $input) : string;
+  }
 
     
-  class UserModel extends Model 
+  class UserModel extends Model implements IUserModel
   {
     public 
       $table = "user",
@@ -21,7 +28,7 @@
       $email, // varchar(150)
       $password, // varchar(150)
       $status = 2, #inactive by default,
-      $role = "USER",
+      $role = "USER", #carchar(100)
       $locale = EZENV["DEFAULT_LOCALE"], //varchar(10)
       $twoFactorAuth, //tinyint(1)
       $createdAt, //timestamp
@@ -57,13 +64,20 @@
       #Invalid password
       if(!password_verify($input->password, $user->password))
       {
-       // throw new Exception (serialize(["password" => $this->lang->translate("invalid_password")]));
+        throw new ApiError (serialize(["password" => $this->lang->translate("invalid_password")]));
       }
 
 
       print_r($user); die("thats all for now");
     }
+    
 
+    /**
+     * @method register
+     * @param object $input
+     * @return string
+     * @throws ApiError exceptions
+     */
     public function register(object $input) : string
     {
       $validation = [];
@@ -126,8 +140,11 @@
       #By default email validation is enable
       if(EZENV["ENFORCE_EMAIL_VALIDATION"])
       {
+        #Get userId as last interted ID
+        $userId = $this->db->lastInsertedId();
+
         #Get an OTP to validate email
-        $otp = OTP::get($this->db->lastInsertedId());
+        $otp = OTP::get($userId);
 
         #Send OTP email
         try
@@ -140,6 +157,10 @@
         }
         catch(Exception $ex)
         {
+          #delete inserted record since we are unable to validate.
+          $this->db->deleteId($userId);
+
+          #Unable to send OTP! Record deleted.
           throw new ApiError (Constant::UNABLE_TO_SEND_OTP);
         }
         

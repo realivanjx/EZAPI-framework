@@ -10,10 +10,10 @@
         #Database fields and table name
         private static 
             $table = "otp",
-            $id,
-            $userId,
-            $otp,
-            $expirationDate;
+            $id, //int 11
+            $userId, //int 11
+            $otp, //int 10
+            $expirationDate; //datetime
 
         #Database object
         private static object $db;

@@ -17,7 +17,7 @@
         {
             (array)$modelVariables = get_class_vars(get_class($this));
 
-            if(!array_key_exists("table", $modelVariables))
+            if(!array_key_exists("table", $modelVariables) && get_class($this) !== "Core\Model")
             {
                 if(!EZENV["PRODUCTION"])
                 {
@@ -26,15 +26,20 @@
 
                 throw new Exception("You must add a 'table' variable to the model: {get_class($this)}");
             }
+
+            if(get_class($this) !== "Core\Model")
+            {
+                $this->db = new MysqlQuery($modelVariables["table"]);
+            }
          
-            $this->db = new MysqlQuery($modelVariables["table"]);
+            
 
             #instantiate language 
             $this->lang = new Translator();  
 
             #Inject Dependencies
-            $dependencyInjection = new DI();
-            $this->di =  $dependencyInjection->load(get_called_class());
+            // $dependencyInjection = new DI();
+            // $this->di =  $dependencyInjection->load(get_called_class());
         }
 
          /**
@@ -44,22 +49,22 @@
          */
         public function assign(object $object) : void 
         {
-            $variables = [];
-
+            $vars = get_class_vars(get_class($this));
+            
             foreach($object as $key => $value) 
             {
-                if(property_exists($this, $key))
+                if(array_key_exists($key, $vars))
                 {
                     #Assign values to its parent class
+                    $vars[$key] = $value;
+
+                    #Assign value to the root variable
                     $this->$key = $value;
-                    
-                    #save values
-                    $variables[$key] = $value;
                 }
             }
 
             #Assign variables to the database class
-            $this->db->modelVariables = $variables;
+            $this->db->modelVariables = $vars;
         }
 
         public function __destruct()

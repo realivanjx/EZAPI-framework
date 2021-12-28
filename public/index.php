@@ -22,6 +22,9 @@
 
     try
     {
+        //Check server requirements before instantiation.
+
+
         #Composer path
         $composerPath = sprintf("%s%svendor%sautoload.php", dirname(__DIR__, 1), DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
 
@@ -49,10 +52,12 @@
                 }
                 else
                 {
-                    throw new Exception("Class not found: {$fileName}");
+                    throw new Exception(sprintf("Class not found: %s", $fileName));
                 }
             });
         }
+
+        //run middleware before dispatching
 
 
         #Dispatch request

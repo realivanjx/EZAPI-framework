@@ -288,7 +288,7 @@
                 {
                     $values[$tableColumns->Field] = password_hash($this->modelVariables[$tableColumns->Field], PASSWORD_DEFAULT);
                 }
-                else if($tableColumns->Field == "date" || $tableColumns->Field == "created")
+                else if($tableColumns->Field === "date" || $tableColumns->Field === "created" || $tableColumns->Field === "createdAT")
                 {
                     $values[$tableColumns->Field] = TIMESTAMP;
                 }

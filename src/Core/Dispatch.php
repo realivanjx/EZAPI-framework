@@ -4,6 +4,8 @@
     use Core\EZENV;
     use Core\Dictionary;
     use Core\Exceptions\ApiError;
+    use \ReflectionClass;
+    use \ReflectionFunction;
     
 
     class Dispatch
@@ -65,11 +67,28 @@
              * If all validations are passed We will pass the params to the method requested
              * and trigger the method as a new instance.
              */
-            $run = new $route();
+       
 
-            /**
-             * Execute the called method
-             */
-            $run->$method();
+            $ref  = new ReflectionClass($route) ;
+            
+            $instances = [];
+            foreach ($ref->getConstructor()->getParameters() as $param) 
+            {
+                // param name
+                $param->name;
+
+                // param type hint (or null, if not specified).
+                $classToInject = $param->getClass()->name;
+
+                if(!empty($classToInject) && !$param->isOptional())
+                {
+                    array_push($instances,  new $classToInject);
+                }
+            }
+
+
+            $instance = $ref->newInstanceArgs($instances);
+            
+            $instance->$method();
         }
     }
