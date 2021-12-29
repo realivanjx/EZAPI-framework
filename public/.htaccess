@@ -1,0 +1,16 @@
+#Official documentation about apache htaccess https://httpd.apache.org/docs/2.4/howto/htaccess.html
+
+#Disable directory indexes
+Options -Indexes
+
+#Allow URLs to be rewritten
+RewriteEngine On
+
+#The request is a directory
+RewriteCond %{REQUEST_FILENAME} !-d
+
+#The request is a file
+RewriteCond %{REQUEST_FILENAME} !-f
+
+#Use index in current directory as a mirror
+RewriteRule ^(.+)$ index.php/$1 [L,QSA]
