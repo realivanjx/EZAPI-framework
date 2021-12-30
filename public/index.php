@@ -1,7 +1,8 @@
 <?php
     namespace EZAPIFRAMEWORK;
-    use \Exception;
+    use Exception;
     use Core\Dispatch;
+    use Core\Exceptions\ExceptionHandler;
 
     /**
     *################################
@@ -56,6 +57,6 @@
     }
     catch(Exception $ex)
     {
-        //Handle errors here
+        new ExceptionHandler($ex);
     }
 ?>

@@ -2,6 +2,7 @@
     namespace Routes;
     use Core\Router;
     use Models\UserModel;
+    use \Exception;
 
     Class User extends Router
     {
@@ -12,7 +13,6 @@
         public function __construct(UserModel $userModel)
         {
             $this->m_userModel = $userModel;
-
 
             parent::__construct();
         }
@@ -26,6 +26,4 @@
             $this->request->jsonResponse(200, ["sucess" => $callModelTest]);
         }
     }
-
-
 ?>
