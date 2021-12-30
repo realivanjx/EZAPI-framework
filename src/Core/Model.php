@@ -1,9 +1,5 @@
 <?php
     namespace Core;
-    use Core\DI;
-    use Core\Languages\Translator;
-    use Core\Database\Mysql;
-    use Core\Database\MysqlQuery;
 
 
     class Model

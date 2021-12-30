@@ -4,6 +4,8 @@
     use Models\UserModel;
     use \Exception;
 
+    use Core\Lang\Translator;
+
     Class User extends Router
     {
 
