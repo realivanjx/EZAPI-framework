@@ -1,0 +1,5 @@
+# Ignore
+.env.development
+.env.production
+composer.lock
+/vendor/

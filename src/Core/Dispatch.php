@@ -1,6 +1,7 @@
 <?php
     namespace Core;
     use Core\Config;
+    use Core\EZENV;
     use \ReflectionClass;
     use \Exceptions;
 
@@ -15,6 +16,9 @@
         {
             #Load app config
             Config::load();
+
+            #Load ezenv
+            EZENV::load();
 
             #Get the path info from the browser
             $pathInfo = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['ORIG_PATH_INFO'];

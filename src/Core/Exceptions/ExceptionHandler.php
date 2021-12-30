@@ -12,9 +12,8 @@
      */
     public function __construct(Exception $ex)
     {
-      $debug = true;
 
-      if($debug)
+      if(!EZENV["PRODUCTION"])
       {
         $errorBuilder = [
           "error" => "Exception Occured",
