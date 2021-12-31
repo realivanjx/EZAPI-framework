@@ -20,15 +20,17 @@
         $password, // varchar(150)
         $status = 2, #inactive by default,
         $role = "USER", #carchar(100)
-        //$locale = EZENV["DEFAULT_LOCALE"], //varchar(10)
+        $locale = EZENV["DEFAULT_LOCALE"], //varchar(10)
         $twoFactorAuth, //tinyint(1)
         $createdAt, //timestamp
         $updatedAt, //timestamp
         $deletedAt; //timestamp
 
-  public function login() : string
-  {
-      return "routing test done";
-  }
+
+
+    public function register() : string
+    {
+        return "routing test done";
+    }
 }
 ?>
