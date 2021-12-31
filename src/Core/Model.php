@@ -1,5 +1,6 @@
 <?php
     namespace Core;
+    use Core\Database\Mysql\Mysql;
 
 
     class Model
@@ -11,6 +12,22 @@
         public function __construct() 
         {
             //initialize db and language
+            (array)$modelVariables = get_class_vars(get_class($this));
+
+            if(!array_key_exists("table", $modelVariables) && get_class($this) !== "Core\Model")
+            {
+                if(!EZENV["PRODUCTION"])
+                {
+                    die(sprintf("You must add a 'table' variable to the model: %s", get_class($this)));
+                }
+
+                throw new Exception(sprintf("You must add a 'table' variable to the model: %s", get_class($this)));
+            }
+
+            if(get_class($this) !== "Core\Model")
+            {
+                $this->db = new Mysql($modelVariables["table"]);
+            }
         }
 
          /**
@@ -40,5 +57,6 @@
 
         public function __destruct()
         {
+            $this->db = null;
         }
     }
