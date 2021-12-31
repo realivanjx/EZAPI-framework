@@ -101,4 +101,16 @@
         {
             return filter_input_array(INPUT_POST, $postData, FILTER_SANITIZE_STRING);
         }
+
+        
+        /**
+         * Check if a string is serialized or not
+         * @method isSerialized
+         * @param string $string
+         * @return bool
+         */
+        public static function isSerialized(string $string) : bool
+        {
+            return (@unserialize($string) !== false);
+        }
     }

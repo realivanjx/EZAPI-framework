@@ -211,11 +211,11 @@
 
         /**
          * @method inputJson
-         * @param bool sanitize (obtional) false by default
+         * @param bool sanitize (obtional) true by default
          * @return object
          * @throws ApiError
          */
-        public function jsonInput(bool $sanitize = false) : object
+        public function jsonInput(bool $sanitize = true) : object
         {
             #Get params 
             $input = file_get_contents("php://input");

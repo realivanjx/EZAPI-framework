@@ -66,7 +66,7 @@
         public function setLocale() : void
         {
             #Receive params and sanitize them.
-            $input = $this->request->jsonInput(true);
+            $input = $this->request->jsonInput();
 
             #Change language locale
             if(!$this->lang->setLocale($input->locale))
@@ -80,12 +80,30 @@
             $this->request->jsonResponse(200, [Constant::MESSAGE => Constant::SUCCESS]);
         }
 
-        public function register() : void
-        {
-            //Testing
-            $callModelTest = $this->m_userModel->register();
 
-            $this->request->jsonResponse(200, ["sucess" => $callModelTest]);
+        /**
+         * @method POST object request
+         * @param object 
+         * @return object
+         * @example URL: http://localhost/user/register
+         * @see the postman collection for a post object request example.
+         */
+        public function register() : void 
+        {
+            #Receive params and sanitize them.
+            $inputObject = $this->request->jsonInput();
+
+            #Attempt to register
+            $response = $this->m_userModel->register($inputObject);
+
+            #OTP sent
+            if($response === Constant::OTP_SENT)
+            {
+                $this->request->jsonResponse(200, ["OTP" => $response]);
+            }
+
+            #Success response
+            $this->request->jsonResponse(200, [Constant::MESSAGE => $response]);
         }
     }
 ?>

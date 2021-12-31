@@ -39,7 +39,7 @@
          * Database connection.
          */
         protected function connect() : void
-        {return;
+        {
             try 
             { 
                 $config = [
@@ -65,11 +65,6 @@
             }
             catch(PDOException $e)
             {
-                if(!EZENV["PRODUCTION"])
-                {
-                   die(print_r($e->getMessage()));
-                }
-
                 throw new Exception($e->getMessage());
             }
         }	

@@ -1,6 +1,7 @@
 <?php
     namespace Core;
     use Core\Database\Mysql\Mysql;
+    use Core\Lang\Translator;
 
 
     class Model
@@ -28,6 +29,9 @@
             {
                 $this->db = new Mysql($modelVariables["table"]);
             }
+
+            #add multilingual support.
+            $this->lang = new Translator();
         }
 
          /**

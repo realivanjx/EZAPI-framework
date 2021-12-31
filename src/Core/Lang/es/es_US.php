@@ -2,5 +2,25 @@
 
 return [
     "hello" => "Hola",
-    "hello_world" => "Hola mundo"
+    "hello_world" => "Hola mundo",
+    "username_or_email_is_required" => "Nombre de usuario o correo es requerido",
+    "password_is_required" => "La contraseña es requerida",
+    "invalid_username_or_email" => "Nombre de usuario o correo electrónico no válido",
+    "invalid_password" => "Contraseña invalida",
+    "first_name_is_required" => "Su primer nombre es requerido",
+    "last_name_is_required" => "Su apellido es requerido",
+    "username_is_required" => "Su nombre de usuario es requerido",
+    "email_is_required" => "Su correo electronico es requerido",
+    "password_confirmation_is_required" => "La confirmación de contraseña es requerida",
+    "invalid_email_address" => "Correo electronico invalido",
+    "this_email_already_exists" => "Este correo electronico ya existe",
+    "your_username_is_too_short" => "Su nombre de usuario es demasiado corto",
+    "your_username_is_too_long" => "Su nombre de usuario es demasiado largo",
+    "this_username_already_exists" => "Este nombre de usuario ya existe",
+    "your_password_is_too_short" => "Su contraseña es demasiado corta",
+    "your_password_is_too_long" => "Su contraseña es demasiado larga",
+    "your_password_does_not_match" => "Sus contraseñas no coinciden",
+    "below_is_your_code" => "Aqui esta su código de verificación de un solo uso",
+    "if_you_are_having_trouble" => "Si tiene algún problema con su cuenta, no dude en ponerse en contacto con nosotros.",
+    "verification_code" =>  "Token de verificación de un solo uso",
 ];

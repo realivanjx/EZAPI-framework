@@ -2,5 +2,25 @@
 
 return [
     "hello" => "Hello",
-    "hello_world" => "Hello world"
+    "hello_world" => "Hello world",
+    "username_or_email_is_required" => "Username or email is required",
+    "password_is_required" => "Password is required",
+    "invalid_username_or_email" => "Invalid username or email",
+    "invalid_password" => "Invalid password",
+    "first_name_is_required" => "First name is required",
+    "last_name_is_required" => "Last name is required",
+    "username_is_required" => "Username is required",
+    "email_is_required" => "Email is required",
+    "password_confirmation_is_required" => "Password confirmation is required",
+    "invalid_email_address" => "Invalid email address",
+    "this_email_already_exists" => "This email already exists",
+    "your_username_is_too_short" => "Your username is too short",
+    "your_username_is_too_long" => "Your username is too long",
+    "this_username_already_exists" => "This username already exists",
+    "your_password_is_too_short" => "Your password is too short",
+    "your_password_is_too_long" => "Your password is too long",
+    "your_password_does_not_match" => "Your passwords do not match",
+    "below_is_your_code" => "Below is your one-time verification code",
+    "if_you_are_having_trouble" => "If you are having any issues with your account, please don't hesitate to contact us.",
+    "verification_code" =>  "One time password",
 ];
