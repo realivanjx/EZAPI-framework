@@ -4,6 +4,7 @@
   use Core\Model;
   use Core\OTP;
   use Core\Exceptions\ApiError;
+  use Core\Mail\Mail;
   
 
   //polymorphism
@@ -106,11 +107,11 @@
         #Send OTP email
         try
         {
-        //   $this->di->Mail->sendOTP(
-        //     $this->fName,
-        //     $this->email,
-        //     $otp
-        //   );
+          Mail::sendOTP(
+            $this->fName,
+            $this->email,
+            $otp
+          );
         }
         catch(Exception $ex)
         {

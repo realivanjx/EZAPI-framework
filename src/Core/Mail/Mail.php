@@ -73,7 +73,7 @@
          * @param string email
          * @param int otp
          */
-        public function sendOTP(string $name, string $email, int $otp) : void
+        public static function sendOTP(string $name, string $email, int $otp) : void
         { 
             #Fill the title parameter
             $this->htmlParameters["title"] = sprintf("<h3>%s <strong>%s,</strong></h3>",
