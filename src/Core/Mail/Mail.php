@@ -1,6 +1,6 @@
 <?php
     namespace Core\Mail;
-    use Core\Mail\Mailer;
+    use Core\Mail\EZMAIL\EZMAIL;
     use Core\lang\Translator;
     use Core\HtmlCompiler;
     use Core\Constant;
@@ -10,11 +10,11 @@
     { 
         #Instance objects
         private  
-            $smtp, 
+            $ezmail,
             $lang;
 
         #The default html template name. This is case sensitive
-        private string $htmlTemplate = "DefaultTemplate";
+        private string $htmlTemplate = "Default";
 
         #Holds the parameters taht will be assigned to the html template.
         private array $htmlParameters = [];
@@ -23,7 +23,18 @@
         public function __construct()
         {
             #Create new instances
-            $this->smtp = EZENV["USE_STMP"] ? new Smtp() : new Mailer();
+            $this->ezmail = new EZMAIL();
+            $this->ezmail->appName = EZENV["APP_NAME"];
+            $this->ezmail->hostName = EZENV["SMTP_HOST"];
+            $this->ezmail->portNumber = EZENV["SMTP_PORT"];
+            $this->ezmail->username = EZENV["SMTP_USERNAME"];
+            $this->ezmail->password = EZENV["SMTP_PASSWORD"];
+
+            if(!empty(EZENV["SMTP_AUTH_TOKEN"]))
+            {
+                $this->ezmail->authType = 3;
+                $this->ezmail->authToken = EZENV["SMTP_AUTH_TOKEN"];
+            }
             
             $this->lang = new Translator();
 
@@ -47,20 +58,18 @@
          */
         private function send(string $subject, string $to, string $name) : void
         {
-            #Add the subject to the email
-            $this->smtp->subject = $subject;
-
-            #add the name and to who it is going
-            $this->smtp->to = [$name => $to];
 
             #Templates folder location.
             $templatePath = sprintf("%s%sMail%sTemplates%s%s.html", dirname(__DIR__), SLASH, SLASH, SLASH, $this->htmlTemplate);
 
-            #Add the body to the email. In this case we are compiling html code
-            $this->smtp->body =  HtmlCompiler::run($templatePath, $this->htmlParameters);
+            
+            $this->ezmail->subject = $subject;
+            $this->ezmail->body = HtmlCompiler::run($templatePath, $this->htmlParameters);
+            $this->ezmail->to = [$name => $to];
+
 
             #Send the email
-            if(!$this->smtp->send())
+            if(!$this->ezmail->send())
             {
                 throw new exception(Constant::UNABLE_TO_SEND);
             }
@@ -73,7 +82,7 @@
          * @param string email
          * @param int otp
          */
-        public static function sendOTP(string $name, string $email, int $otp) : void
+        public  function sendOTP(string $name, string $email, int $otp) : void
         { 
             #Fill the title parameter
             $this->htmlParameters["title"] = sprintf("<h3>%s <strong>%s,</strong></h3>",

@@ -16,13 +16,16 @@
             $expirationDate; //datetime
 
         #Database object
-        private static object $db;
+        private static ?Mysql $db = null;
 
 
         #Constructor
-        public function __construct()
+        public static function initializeDB()
         {
-            self::$db = new Mysql(self::$table);
+            if(self::$db == null)
+            {
+                self::$db = new Mysql(self::$table);
+            }
         }
 
         
@@ -36,6 +39,8 @@
          */
         public static function get(int $userId, int $expiry = 15) : int
         {
+            self::initializeDB();
+
             #Generate a new token
             $otp = Helper::randomNumber(6);
             
@@ -64,6 +69,8 @@
          */
         public static function delete(int $userId) : bool
         {
+            self::initializeDB();
+
             return self::$db->delete([
                 "where" => "userId = ?",
                 "bind" => [$userId]
@@ -78,6 +85,8 @@
          */
         public static function validate(int $userId, int $otp) : string
         {
+            self::initializeDB();
+            
             #Select values
             $validate = self::$db->select([
                 "where" => "userId = ? AND otp = ?",

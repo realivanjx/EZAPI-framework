@@ -3,6 +3,8 @@
   use Exception;
   use Core\Model;
   use Core\OTP;
+  use Core\Cookie;
+  use Core\Constant;
   use Core\Exceptions\ApiError;
   use Core\Mail\Mail;
   
@@ -107,7 +109,8 @@
         #Send OTP email
         try
         {
-          Mail::sendOTP(
+          $test = new Mail();
+          $test->sendOTP(
             $this->fName,
             $this->email,
             $otp

@@ -113,4 +113,21 @@
         {
             return (@unserialize($string) !== false);
         }
+
+         /**
+         * @method randomNumber
+         * @param int length
+         * @return int 
+         */
+        public static function randomNumber(int $length) : int
+        {
+            $result = null;
+
+            for($i = 0; $i < (int) $length; $i++) 
+            {
+                $result .= mt_rand(0, 9);
+            }
+
+            return (int)$result;
+        }
     }
