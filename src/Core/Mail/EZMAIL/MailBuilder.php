@@ -113,7 +113,7 @@ class MailBuilder implements IMailBuilder
     private function encodeContent(string $content) : array
     {
         $enc = base64_encode($content);
-        $enc = trim(chunk_split($enc, strlen($enc)," "));
+        $enc = trim(chunk_split($enc, 76, " "));
         return explode(" ", $enc);
     }
 
@@ -216,5 +216,3 @@ class MailBuilder implements IMailBuilder
         );
     }
 }
-
-?>

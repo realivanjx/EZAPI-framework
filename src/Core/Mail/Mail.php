@@ -45,7 +45,9 @@
             $this->htmlParameters = [
                 "locale" => $currentLanguageInfo["locale"],
                 "charset" => $currentLanguageInfo["charset"],
-                "year"=> date("Y")
+                "title" => EZENV["APP_NAME"], #optional
+                "header" => sprintf("<h1 class'bold'>%s</h1>", EZENV["APP_NAME"]), #can also be html
+                "footer" => "" # Can also be html
             ];
         }  
 
@@ -58,15 +60,12 @@
          */
         private function send(string $subject, string $to, string $name) : void
         {
-
             #Templates folder location.
             $templatePath = sprintf("%s%sMail%sTemplates%s%s.html", dirname(__DIR__), SLASH, SLASH, SLASH, $this->htmlTemplate);
-
             
             $this->ezmail->subject = $subject;
             $this->ezmail->body = HtmlCompiler::run($templatePath, $this->htmlParameters);
             $this->ezmail->to = [$name => $to];
-
 
             #Send the email
             if(!$this->ezmail->send())
@@ -84,18 +83,14 @@
          */
         public  function sendOTP(string $name, string $email, int $otp) : void
         { 
-            #Fill the title parameter
-            $this->htmlParameters["title"] = sprintf("<h3>%s <strong>%s,</strong></h3>",
-                $this->lang->translate("hello"), 
-                $name
-            );
-
             #Fill the preheader parameter
             $this->htmlParameters["preHeader"] = $this->lang->translate("below_is_your_code");
 
             #Fill the body parameter
             $this->htmlParameters["body"] = sprintf(
-                "<p>%s</p><br><h2><b>%s</b></h2><br><p>%s</p>", 
+                "<h3>%s <strong>%s,</strong></h3><p>%s</p><br><h2><b>%s</b></h2><br><p>%s</p>", 
+                $this->lang->translate("hello"), 
+                $name,
                 $this->lang->translate("below_is_your_code"), 
                 $otp, 
                 $this->lang->translate("if_you_are_having_trouble")

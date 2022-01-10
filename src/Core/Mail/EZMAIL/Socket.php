@@ -85,5 +85,3 @@ class Socket implements ISocket
         catch (Exception $ex) { }
     }
 }
-
-?>

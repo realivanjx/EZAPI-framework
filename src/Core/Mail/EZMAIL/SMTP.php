@@ -440,7 +440,7 @@ class SMTP implements ISMTP
         $result = explode(" ", $result, 1)[0]; // Get only the first string after OK.
         $result = trim($result, "<>"); // Remove <> brackets.
 
-        if (strpos($result, "id=") !== false)  // Some hostings use this format.
+        if (strpos($result, "id=") === 0) // Some hostings use this format.
         {
             $result = substr($result, 3);
         }
@@ -464,5 +464,3 @@ class SMTP implements ISMTP
         }
     }
 }
-
-?>
