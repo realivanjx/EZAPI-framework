@@ -14,11 +14,13 @@
          */
         public static function request() : void
         {
-            #Load app config
+            #Load app config first
             Config::load();
 
             #Load ezenv
             EZENV::load();
+
+            
 
             #Get the path info from the browser
             $pathInfo = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['ORIG_PATH_INFO'];

@@ -130,4 +130,16 @@
 
             return (int)$result;
         }
+
+
+        /**
+         * @method getUserAgent
+         * @return string currrent user agent
+         * 
+         * note: this will get current agent info.
+         */
+        public static function getUserAgent() : string
+        {
+            return preg_replace('/\/[a-zA-Z0-9.]+/', '', $_SERVER['HTTP_USER_AGENT']);
+        }
     }

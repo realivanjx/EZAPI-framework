@@ -7,6 +7,8 @@
   use Core\Constant;
   use Core\Exceptions\ApiError;
   use Core\Mail\Mail;
+  use Core\Session;
+  use Core\Globals;
   
 
   //polymorphism
@@ -235,43 +237,33 @@
         }
       }
 
-      
+      #asign cookie session
+      $handleSession = Session::set($user->id);
 
-      // #asign cookie session
-      // $handleSession = Session::set($this->id);
-
-      // if($handleSession == Constant::SUCCESS)
-      // {
-      //   #unset password
-      //   $this->password = null;
-
-      //   #Set global
-      //   Globals::$userId = $this->id;
-      //   Globals::$userRole = $this->role;
-      //   Globals::$userLanguage = $this->locale;
+      if($handleSession == Constant::SUCCESS)
+      {
+        #Assign user
+        $this->assign($user);
         
-      //   #change language preference
-      //   if($this->lang->currentLocale() != $this->locale)
-      //   {
-      //     $this->lang->setLocale($this->locale);
-      //   }
+        #unset password
+        $this->password = null;
 
-      //   return Constant::SUCCESS;
-      // }
+        #Set global
+        Globals::$userId = $this->id;
+        Globals::$userRole = $this->role;
+        Globals::$userLanguage = $this->locale;
+        
+        #change language preference
+        if($this->lang->currentLocale() != $this->locale)
+        {
+          $this->lang->setLocale($this->locale);
+        }
 
-      // #Add error to logger
-      // Logger::write($handleSession, 3);
+        return Constant::SUCCESS;
+      }
 
-      
-
-      
-
-      #Asign values
-      //$this->assign($user);
-
-      // #Unable to set cookie session
+      #Unable to set cookie session
       throw new Exception (Constant::ERROR_MESSAGE);
-
     }
   }
 ?>

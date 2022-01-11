@@ -79,8 +79,9 @@
          * @param string name
          * @param string email
          * @param int otp
+         * @return bool
          */
-        public  function sendOTP(string $name, string $email, int $otp) : void
+        public  function sendOTP(string $name, string $email, int $otp) : bool
         { 
             #Fill the preheader parameter
             $this->htmlParameters["preHeader"] = $this->lang->translate("below_is_your_code");
@@ -96,19 +97,22 @@
             );
 
             #Send email
-            $this->send(
+            if($this->send(
                 $this->lang->translate("verification_code"), 
                 $email, 
                 $name
-            );
+            ))  return true;
+
+            return false;
         }
 
 
         /**
          * @param string name
          * @param string email
+         * @return bool
          */
-        public function sendWelcomeEmail(string $name, string $email) : void
+        public function sendWelcomeEmail(string $name, string $email) : bool
         {
             #Fill the preheader parameter
             $this->htmlParameters["preHeader"] = $this->lang->translate("your_account_has_been_created");
@@ -123,10 +127,18 @@
             );
  
             #Send email
-            $this->send(
+            if($this->send(
                 sprintf("%s %s", $this->lang->translate("welcome_to"), EZENV["APP_NAME"]),
                 $email, 
                 $name
-            );
+            )) return true;
+
+            return false;
+        }
+
+
+        public function newDeviceNotification($name, $email, $userIp, $userAgent) : bool
+        {
+
         }
     }

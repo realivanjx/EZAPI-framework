@@ -107,6 +107,13 @@
         }
 
 
+        /**
+         * @method POST object request
+         * @param object 
+         * @return object
+         * @example URL: http://localhost/user/login
+         * @see the postman collection for a post object request example.
+         */
         public function login() : void
         {
             #Receive params and sanitize them.

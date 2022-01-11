@@ -22,7 +22,19 @@
 
                 #date
                 "CURRENT_TIMEZONE" => "America/New_York",
-                "TIMESTAMP" => date("Y-m-d H:i:s")
+                "TIMESTAMP" => date("Y-m-d H:i:s"),
+                "CURRENT_TIME" => time(),
+
+                "USER_AGENT_NAME" => "EZAPI_FRAMEWORK", //Agent name
+                "USER_SESSION_NAME" => "EZAPI_DNRJZJXQGAEPA0BMYN5Q", //Random
+                "USER_SESSION_EXPIRY" => 15, //time in minutes. is the timout time for the cooke unless the session is extended
+
+                "DEBUGING_TOOLS" => ["PostmanRuntime"],//these tools will be blocked in production //PostmanRuntime
+                "IP_BLACKLIST" => [],//blocked ips in production mode
+
+                "ALLOW_MULTI_LOGIN" => true,
+                "MULTI_LOGIN_COUNT" => 5 //number of devices allowed to be logged at the same time
+
             ];
 
 
