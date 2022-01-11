@@ -99,7 +99,25 @@
             #OTP sent
             if($response === Constant::OTP_SENT)
             {
-                $this->request->jsonResponse(200, ["OTP" => $response]);
+                $this->request->jsonResponse(200, ["OTP" => $this->lang->translate("OTP_SENT")]);
+            }
+
+            #Success response
+            $this->request->jsonResponse(200, [Constant::MESSAGE => $response]);
+        }
+
+
+        public function login() : void
+        {
+            #Receive params and sanitize them.
+            $inputObject = $this->request->jsonInput();
+
+            #Attempt to login
+            $response = $this->m_userModel->login($inputObject);
+
+            if($response === Constant::OTP_SENT)
+            {
+                $this->request->jsonResponse(200, ["OTP" => $this->lang->translate("OTP_SENT")]);
             }
 
             #Success response

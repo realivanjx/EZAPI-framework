@@ -1,6 +1,7 @@
 <?php
     namespace Core\Database\Mysql;
     use Core\Database\Mysql\DB;
+    use Core\Constant;
 
     class Mysql extends DB
     {
@@ -264,7 +265,7 @@
         public function tableFields(string $table = null) : array
         {
             $fields = [];
-            foreach($this->db->tableColumns($table) as $tableColumns)
+            foreach($this->tableColumns($table) as $tableColumns)
             {
             $fields[] = $tableColumns->Field;
             }

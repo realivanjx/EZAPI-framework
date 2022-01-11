@@ -23,7 +23,7 @@
         $username, // varchar(100)
         $email, // varchar(150)
         $password, // varchar(150)
-        $status = 2, #inactive by default,
+        $status, #active by default,
         $role = "USER", #carchar(100)
         $locale = EZENV["DEFAULT_LOCALE"], //varchar(10)
         $twoFactorAuth, //tinyint(1)
@@ -31,7 +31,9 @@
         $updatedAt, //timestamp
         $deletedAt; //timestamp
 
-
+    public const STATUS_ACTIVE = "active";
+    public const STATUS_INACTIVE = "inactive";
+    public const STATUS_BANNED = "banned";
 
     /**
      * @param object $input
@@ -100,6 +102,9 @@
       #By default email validation is enable
       if(EZENV["ENFORCE_EMAIL_VALIDATION"])
       {
+        #set account status to inactive
+        $this->status = self::STATUS_INACTIVE;
+
         #Get userId as last interted ID
         $userId = $this->db->lastInsertedId();
 
@@ -132,5 +137,141 @@
       #Registration susccessful
       return Constant::SUCCESS;
     }
-}
+
+
+    /**
+     * @param object $input
+     * @return string
+     * @throws ApiError exceptions
+     */
+    public function login(object $input) : string
+    { 
+      #Check if username or email field is empty
+      if(empty($input->username_or_email))
+      {
+        throw new ApiError (serialize(["username_or_email" => $this->lang->translate("username_or_email_is_required")]));
+      }
+
+      #Check if password field is empty
+      if(empty($input->password))
+      {
+        throw new ApiError (serialize(["password" => $this->lang->translate("password_is_required")]));
+      }
+
+      #Check whether the user entered a valid email otherwise treat it as an username
+      $identifier = filter_var($input->username_or_email, FILTER_VALIDATE_EMAIL) ? "email" : "username";
+      
+      #Attempt to find the user in the database with the username or email provided
+      $user =  $this->db->findFirst([$identifier => $input->username_or_email]);
+ 
+      #User not found
+      if(empty($user->$identifier))
+      {
+        throw new ApiError (serialize(["username_or_email" => $this->lang->translate("invalid_username_or_email")]));
+      }
+      
+      #Invalid password
+      if(!password_verify($input->password, $user->password))
+      {
+        throw new ApiError (serialize(["password" => $this->lang->translate("invalid_password")]));
+      }
+
+      #Check if the user is banned
+      if($user->status == self::STATUS_BANNED)
+      {
+        throw new ApiError (serialize(["banned" => $this->lang->translate("account_banned")]));
+      }
+
+      $test = new Mail();
+      
+      /**
+       * If enforce email validation is enable and the account status is inactive return OTP required or
+       * if the account has 2 factor auth enable send an OPT. 
+       */
+      if($user->status == self::STATUS_INACTIVE && EZENV["ENFORCE_EMAIL_VALIDATION"] || $user->twoFactorAuth)
+      {
+        #OTP required
+        if(empty($input->token))
+        {
+          #Get an OTP
+          $otp = OTP::get($user->id);
+
+          #Send OTP email
+          try
+          {            
+
+            #Send OTP
+            $test->sendOTP(
+              $user->fName,
+              $user->email,
+              $otp
+            );
+          }
+          catch(Exception $ex)
+          {
+            #Unable to send OTP! Record deleted.
+            throw new ApiError (serialize(["OTP" =>  $this->lang->translate("unable_to_send_otp")]));
+          }
+          
+          return Constant::OTP_SENT;
+        }
+
+        #validate token auth
+        $tokenResp = OTP::validate($user->id, $input->token);
+
+        if($tokenResp !== constant::SUCCESS)
+        {
+          throw new ApiError (serialize(["OTP" => $this->lang->translate("invalid_otp")]));
+        }
+
+        #activate account
+        if($user->status == self::STATUS_INACTIVE)
+        {
+          #update account status
+          $update = $this->db->updateById($user->id, ["status" => self::STATUS_ACTIVE]);
+
+          #Send welcome email First
+          $test->sendWelcomeEmail($user->fName, $user->email);
+        }
+      }
+
+      
+
+      // #asign cookie session
+      // $handleSession = Session::set($this->id);
+
+      // if($handleSession == Constant::SUCCESS)
+      // {
+      //   #unset password
+      //   $this->password = null;
+
+      //   #Set global
+      //   Globals::$userId = $this->id;
+      //   Globals::$userRole = $this->role;
+      //   Globals::$userLanguage = $this->locale;
+        
+      //   #change language preference
+      //   if($this->lang->currentLocale() != $this->locale)
+      //   {
+      //     $this->lang->setLocale($this->locale);
+      //   }
+
+      //   return Constant::SUCCESS;
+      // }
+
+      // #Add error to logger
+      // Logger::write($handleSession, 3);
+
+      
+
+      
+
+      #Asign values
+      //$this->assign($user);
+
+      // #Unable to set cookie session
+      throw new Exception (Constant::ERROR_MESSAGE);
+
+    }
+  }
 ?>

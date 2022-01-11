@@ -6,7 +6,7 @@ return [
     "username_or_email_is_required" => "Username or email is required",
     "password_is_required" => "Password is required",
     "invalid_username_or_email" => "Invalid username or email",
-    "invalid_password" => "Invalid password",
+    "invalid_password" => "Invalid password combination",
     "first_name_is_required" => "First name is required",
     "last_name_is_required" => "Last name is required",
     "username_is_required" => "Username is required",
@@ -23,4 +23,12 @@ return [
     "below_is_your_code" => "Below is your one-time verification code",
     "if_you_are_having_trouble" => "If you are having any issues with your account, please don't hesitate to contact us.",
     "verification_code" =>  "One time password",
+    "account_banned" => "Account banned",
+    "account_inactive" => "Account inactive",
+    "OTP_SENT" => "A one-time verification code has been sent to your email",
+    "invalid_otp" => "one-time verification code invalid",
+    "your_account_has_been_created" => "Your account has been created successfully",
+    "welcome_to" => "Welcome to",
+    "if_you_are_having_trouble" => "If you are having any issues with your account, please don't hesitate to contact us.",
+    "unable_to_send_otp" => "Unable to send the one-time verification code"
 ];

@@ -6,7 +6,7 @@ return [
     "username_or_email_is_required" => "Nombre de usuario o correo es requerido",
     "password_is_required" => "La contraseña es requerida",
     "invalid_username_or_email" => "Nombre de usuario o correo electrónico no válido",
-    "invalid_password" => "Contraseña invalida",
+    "invalid_password" => "Combinacion de contraseña invalida",
     "first_name_is_required" => "Su primer nombre es requerido",
     "last_name_is_required" => "Su apellido es requerido",
     "username_is_required" => "Su nombre de usuario es requerido",
@@ -23,4 +23,12 @@ return [
     "below_is_your_code" => "Aqui esta su código de verificación de un solo uso",
     "if_you_are_having_trouble" => "Si tiene algún problema con su cuenta, no dude en ponerse en contacto con nosotros.",
     "verification_code" =>  "Token de verificación de un solo uso",
+    "account_banned" => "Cuenta bloqueada",
+    "account_inactive" => "Cuenta inactiva",
+    "OTP_SENT" => "Se ha enviado un código de verificación de un solo uso a su correo electrónico",
+    "invalid_otp" => "código de verificación único invalido",
+    "your_account_has_been_created" => "Tu cuenta ha sido creada con exito",
+    "welcome_to" => "Bienvenida a",
+    "if_you_are_having_trouble" => "Si tiene algún problema con su cuenta, no dude en contactarnos.",
+    "unable_to_send_otp" => "No se pudo enviar el código de verificación único"
 ];

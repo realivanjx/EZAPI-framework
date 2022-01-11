@@ -46,7 +46,7 @@
                 "locale" => $currentLanguageInfo["locale"],
                 "charset" => $currentLanguageInfo["charset"],
                 "title" => EZENV["APP_NAME"], #optional
-                "header" => sprintf("<h1 class'bold'>%s</h1>", EZENV["APP_NAME"]), #can also be html
+                "header" => sprintf("<h1>%s</h1>", EZENV["APP_NAME"]), #can also be html
                 "footer" => "" # Can also be html
             ];
         }  
@@ -76,7 +76,6 @@
 
 
         /**
-         * @method sendOTP
          * @param string name
          * @param string email
          * @param int otp
@@ -99,6 +98,33 @@
             #Send email
             $this->send(
                 $this->lang->translate("verification_code"), 
+                $email, 
+                $name
+            );
+        }
+
+
+        /**
+         * @param string name
+         * @param string email
+         */
+        public function sendWelcomeEmail(string $name, string $email) : void
+        {
+            #Fill the preheader parameter
+            $this->htmlParameters["preHeader"] = $this->lang->translate("your_account_has_been_created");
+
+            #Fill the body parameter
+            $this->htmlParameters["body"] = sprintf(
+                "<h3>%s <strong>%s,</strong></h3><p>%s</p><br><p>%s</p>", 
+                $this->lang->translate("hello"),
+                $name,
+                $this->lang->translate("your_account_has_been_created"),
+                $this->lang->translate("if_you_are_having_trouble")
+            );
+ 
+            #Send email
+            $this->send(
+                sprintf("%s %s", $this->lang->translate("welcome_to"), EZENV["APP_NAME"]),
                 $email, 
                 $name
             );
