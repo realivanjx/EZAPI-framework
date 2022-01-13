@@ -37,6 +37,8 @@
     public const STATUS_INACTIVE = "inactive";
     public const STATUS_BANNED = "banned";
 
+    
+
     /**
      * @param object $input
      * @return string

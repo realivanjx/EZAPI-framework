@@ -2,8 +2,13 @@
     namespace Core;
     use Core\Config;
     use Core\EZENV;
+    use Core\Session;
+    use Core\Globals;
+    use Core\RBAC;
+    use Core\Constant;
     use \ReflectionClass;
     use \Exceptions;
+    use Core\Core\Exceptions\ApiError;
 
 
     class Dispatch
@@ -61,7 +66,27 @@
             if(!class_exists($route) || !method_exists($route, $method))
             {
                 //error 400
-                throw new Exception("Invalid request");
+                throw new ApiError(Constant::INVALID_REQUEST);
+            }
+
+            /*
+            * Before instantiating the requested method we first validate the user with the authentication 
+            * system or verify that the requested method is in the allow  array.
+            */
+            if(isset($_COOKIE[USER_SESSION_NAME]) && !Session::extend() ||
+            !isset($_COOKIE[USER_SESSION_NAME]) && !RBAC::isViewAllow(Globals::$userRole, $route, $method))
+            {
+                throw new ApiError(Constant::AUTH_REQUIRED, 401);
+            } 
+
+
+            /**
+             * Verify that the current logged in user has access
+             * to the requested route.
+             */
+            if(!RBAC::isViewAllow(Globals::$userRole, $route, $method))
+            {
+                throw new ApiError(Constant::ACCESS_DENIED, 403);
             }
 
             /**

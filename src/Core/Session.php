@@ -284,7 +284,7 @@
             $userAgent = Helper::getUserAgent();
 
             #get IP
-            $userIP = Helper::getClientIP();
+            $userIP = Helper::publicIP();
 
             #find session
             $session = self::_db()->select([

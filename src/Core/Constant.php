@@ -20,6 +20,9 @@
         public const OTP_EXPIRED = "OTP expired";
         public const UNABLE_TO_SEND = "Unable to send email";
         PUBLIC CONST UNABLE_TO_SEND_OTP = "Unable to send OTP to this email address";
+        const AUTH_REQUIRED = "Authentication required";
+        const ACCESS_DENIED = "Access Denied";
+        const INVALID_REQUEST = "Invalid request";
         
 
         #Responses
