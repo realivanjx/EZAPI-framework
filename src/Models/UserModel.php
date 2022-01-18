@@ -37,6 +37,13 @@
     public const STATUS_INACTIVE = "inactive";
     public const STATUS_BANNED = "banned";
 
+    protected $_mail;
+
+    public function __construct()
+    {
+      $this->_mail = new Mail();
+    }
+
     
 
     /**
@@ -118,8 +125,7 @@
         #Send OTP email
         try
         {
-          $test = new Mail();
-          $test->sendOTP(
+          $this->_mail->sendOTP(
             $this->fName,
             $this->email,
             $otp
@@ -266,6 +272,299 @@
 
       #Unable to set cookie session
       throw new Exception (Constant::ERROR_MESSAGE);
+    }
+
+
+    /**
+     * @method isLogged
+     * @return bool
+     */
+    public function isLogged() : bool
+    {
+      #If the cookie is not found, auth is required
+      $cookieUserId = Session::get();
+
+      if(!$cookieUserId) return false;
+
+      $user = $this->db->findFirst(["id" => $cookieUserId]);
+
+      #It will always be true but we must have some kind of validation here
+      if(!empty($user))
+      {
+        $this->assign($user);
+
+        #Set global
+        Globals::$userId = $this->id;
+        Globals::$userRole = $this->role;
+        Globals::$userLanguage = $this->locale;
+
+        return true;
+      }
+
+      return false;
+    }
+
+
+    /**
+     * @method info
+     * @return array
+     */
+    public function info() : array
+    {
+      return $this->vars();
+    }
+
+
+    public function logout() : bool
+    {
+      #Distroy session
+      $status = Session::delete();
+
+      if($status == Constant::SUCCESS)
+      {
+        Globals::$userId = null;
+        Globals::$userRole = null;
+        Globals::$userLanguage = null;
+
+        return true;
+      }
+
+      return false;
+    }
+
+    public function extendAuth() : bool
+    {
+      if(Session::extend())
+      {
+        return true;
+      }
+
+      Globals::$userId = null;
+      Globals::$userRole = null;
+      Globals::$userLanguage = null;
+
+      return false;
+    }
+
+    public function updateUser(object $input) : bool
+    {
+      $validation = [];
+
+      #These fields cannot be changed
+      $blacklisted = [
+        "id",
+        "role",
+        "status",
+        "createdAt",
+        "updatedAt",
+        "deletedAt"
+      ];
+
+      #EMAIL VALIDATION
+      if(!empty($input->email))
+      {
+        if(!filter_var($input->email, FILTER_VALIDATE_EMAIL)) $validation["email"] = $this->lang->translate("invalid_email_address");
+        
+        $user = $this->db->findFirst(["email" => $input->email]);
+
+        if(!empty($user->email)) $validation["email"] = $this->lang->translate("this_email_already_exists");
+      }
+
+      #USERNAME VALIDATION
+      if(!empty($input->username))
+      {
+        if(strlen($input->username) < 8) $validation["username"] = $this->lang->translate("your_username_is_too_short");
+        if(strlen($input->username) > 150) $validation["username"] = $this->lang->translate("your_username_is_too_long");
+
+        $user = $this->db->findFirst(["username" => $input->username]);
+        if(!empty($user->username)) $validation['username'] = $this->lang->translate("this_username_already_exists");
+      }
+
+      #update password
+      if(!empty($input->password))
+      {
+        if(empty($input->currentPassword)) $validation["currentPassword"] = $this->lang->translate("current_password_password");
+        
+        #return errors because we are updating the current password and it cantnot be empty
+        if(!empty($validation)) throw new ApiError (serialize($validation));
+
+        #verify if the password match
+        if(!password_verify($input->currentPassword, $this->password))
+        {
+          $validation["currentPassword"] = $this->lang->translate("current_password_is_invalid");
+        }
+
+        #Fields validations
+        if(empty($input->password)) $validation["password"] = $this->lang->translate("password_is_required");
+        if(strlen($input->password) < 8) $validation["password"] =  $this->lang->translate("your_password_is_too_short");
+        if(strlen($input->password) > 150) $validation["password"] =  $this->lang->translate("your_password_is_too_long");
+
+        #Add any other password validations here
+
+        if(empty($input->confirmPassword)) $validation["confirmPassword"] = $this->lang->translate("password_confirmation_is_required");
+        if(!empty($input->confirmPassword) && $input->password !=  $input->confirmPassword) $validation["confirmPassword"] =  $this->lang->translate("your_password_confirmation_doesnt_match");
+
+        #return errors
+        if(!empty($validation)) throw new ApiError (serialize($validation));
+
+        #remove current password and confirm password from the object since they were only needed for validation
+        unset($input->currentPassword);
+        unset($input->confirmPassword);
+      }
+
+      #Only admins can update these columns. We also blacklist ID and created to prevent security leaks
+      foreach($input as $key => $value)
+      {
+        if(in_array($key, $blacklisted)) 
+        {
+          $validation[$key] = $this->lang->translate("access_to_this_field_is_forbidden");
+        }
+      }     
+
+      #language
+      if(!empty($input->locale))
+      {
+        if(!in_array($input->locale, $this->lang::SUPPORTED_LANGUAGES))
+        {
+          $validation["locale"] = $this->lang->translate("invalid_language_locale");
+        } 
+      }
+
+      if(!empty($validation)) throw new ApiError (serialize($validation));
+
+      #update values using UserID and params provided
+      $updateResp = $this->db->updateById($this->id, (array) $input);
+
+      if($updateResp == Constant::SUCCESS)
+      {
+        return true;
+      }
+
+      #Error
+      return false;
+    }
+
+
+    public function resetPsw(object $input) : string 
+    {
+      $validation = [];
+
+      #send OTP
+      if(!$this->isLogged() && empty($input->otp))
+      {
+        #Username or email is requried
+        if(empty($input->username_or_email))
+        {
+          $validation["username_or_email"] = $this->lang->translate("username_or_email_is_required");
+        }
+
+        if(!empty($validation)) throw new ApiError (serialize($validation));
+       
+        #find user with user email
+        $key = filter_var($input->username_or_email, FILTER_VALIDATE_EMAIL) ? "email" : "username";
+
+        #Db query
+        $user = $this->db->findFirst([$key => $input->username_or_email]);
+        
+        if(!empty($user->id))
+        {
+          #Assign user values
+          $this->assign($user);
+        }
+        else
+        {
+          $validation["username_or_email"] = $this->lang->translate("invalid_username_or_email");
+        }
+
+        if(!empty($validation)) throw new ApiError (serialize($validation));
+
+
+        #Get an OTP
+        $otp = OTP::get($user->id);
+        
+        #Send OTP
+        $this->_mail->sendOTP(
+          $this->fName,
+          $this->email,
+          $otp
+        );
+
+        #Token sent
+        return "OTP";
+      }
+
+      #Fields validations
+      if(empty($input->password)) $validation["password"] = $this->lang->translate("password_is_required");
+      if(strlen($input->password) < 8) $validation["password"] =  $this->lang->translate("your_password_is_too_short");
+      if(strlen($input->password) > 150) $validation["password"] =  $this->lang->translate("your_password_is_too_long");
+
+      #Add any other password validations here
+
+      if(empty($input->confirmPassword)) $validation["confirmPassword"] = $this->lang->translate("password_confirmation_is_required");
+      if(!empty($input->confirmPassword) && $input->password !=  $input->confirmPassword) $validation["confirmPassword"] =  $this->lang->translate("your_password_confirmation_doesnt_match");
+
+      #Validation errors
+      if(!empty($validation)) throw new ApiError (serialize($validation));
+
+      #If the user is logged the current password is requried to validate the change
+      if(!empty($this->id))
+      {
+        if(empty($input->currentPassword)) $validation["currentPassword"] = $this->lang->translate("current_password_password");
+        
+        #verify  if the password match
+        if(!password_verify($input->currentPassword, $this->password))
+        {
+          $validation["currentPassword"] = $this->lang->translate("current_password_is_invalid");
+        }
+      }
+      else
+      { 
+        #Username or email is requried
+        if(empty($input->username_or_email)) $validation["username_or_email"] = $this->lang->translate("username_or_email_is_required");
+
+
+        #find user with user email
+        $key = filter_var($input->username_or_email, FILTER_VALIDATE_EMAIL) ? "email" : "username";
+
+        #Db query
+        $user = $this->db->findFirst([$key => $input->username_or_email]);
+
+        if (!$user->id)
+        {
+          $validation["username_or_email"] = $this->lang->translate("invalid_username_or_email");
+        }
+
+        #Call validation errors again
+        if(!empty($validation)) throw new ApiError (serialize($validation));
+        
+        #Validate token
+        $validate = Token::validate($user->id, $input->token);
+
+        if($validate != Constant::SUCCESS)
+        {
+          $validation["token"] = $validate;
+        }
+      }
+
+      #Call validation errors again
+      if(!empty($validation)) throw new ApiError (serialize($validation));
+
+      #Update password field
+      $updateResp = $this->db->updateById($this->id, ["password" => $input->password]);
+
+      if($updateResp == Constant::SUCCESS)
+      {
+        #Send confirmation
+        $this->_mail->resetPsw(
+          $this->fName,
+          $this->email
+        );
+
+        return Constant::SUCCESS;
+      }
+
+      #Update password
+      throw new ApiError (Constant::ERROR);
     }
   }
 ?>

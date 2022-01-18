@@ -137,8 +137,53 @@
         }
 
 
-        public function newDeviceNotification($name, $email, $userIp, $userAgent) : bool
+        /**
+         * @param string name
+         * @param string email
+         * @param string userIp
+         * @param string userAgent
+         * @return bool
+         */
+        public function newDeviceNotification(string $name, string $email, string $userIp, string $userAgent) : bool
         {
+            #Fill the preheader parameter
+            $this->htmlParameters["preHeader"] = $this->lang->translate("we_detected_a_new_device");
 
+            #Fill the body parameter
+            $this->htmlParameters["body"] = sprintf("<p>%s</p><br>", $this->lang->translate("we_detected_a_new_device"));
+            $this->htmlParameters["body"] .= sprintf("<p>%s:</p>", $this->lang->translate("a_new_login_was_attempted"));
+            $this->htmlParameters["body"] .= sprintf("<p>%s: %s</p>", "IP", $userIp);
+            $this->htmlParameters["body"] .= sprintf("<p>%s: %s</p>", $this->lang->translate("browser"), $userAgent);
+            $this->htmlParameters["body"] .= sprintf("<p>%s: %s</p>", $this->lang->translate("date"), TIMESTAMP);
+            $this->htmlParameters["body"] .= sprintf("<br><p>%s</p>", $this->lang->translate("if_you_did_not_make_this_change"));
+ 
+            #Send email
+            if($this->send(
+                $this->lang->translate("login_from_a_new_device_detected"),
+                $email, 
+                $name
+            )) return true;
+
+            return false;
+        }
+
+        public function resetPsw(string $name, string $email) : bool 
+        {
+            #Fill the preheader parameter
+            $this->htmlParameters["preHeader"] = $this->lang->translate("your_password_has_been_updated");
+
+            #Fill the body parameter
+            $this->htmlParameters["body"] = sprintf("<h3>%s <strong>%s,</strong></h3>", $lang->translate("hello"), $name);
+            $this->htmlParameters["body"] .= sprintf("<p>%s</p><br>", $lang->translate("your_password_has_been_updated"));
+            $this->htmlParameters["body"] .= sprintf("<br><p>%s</p>", $lang->translate("if_you_did_not_make_this_change"));
+ 
+            #Send email
+            if($this->send(
+                $this->lang->translate("password_reset_confirmation"),
+                $email, 
+                $name
+            )) return true;
+
+            return false;
         }
     }

@@ -8,7 +8,7 @@
     use Core\Constant;
     use \ReflectionClass;
     use \Exceptions;
-    use Core\Core\Exceptions\ApiError;
+    use Core\Exceptions\ApiError;
 
 
     class Dispatch

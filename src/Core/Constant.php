@@ -23,10 +23,7 @@
         const AUTH_REQUIRED = "Authentication required";
         const ACCESS_DENIED = "Access Denied";
         const INVALID_REQUEST = "Invalid request";
-        
-
-        #Responses
         public const MESSAGE = "message";
         public const SUCCESS = "success";
-        public const OTP_SENT = "A one-time password was sent to your email";
+        public const RESPONSE = "response";
     }

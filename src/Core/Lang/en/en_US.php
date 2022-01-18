@@ -30,5 +30,23 @@ return [
     "your_account_has_been_created" => "Your account has been created successfully",
     "welcome_to" => "Welcome to",
     "if_you_are_having_trouble" => "If you are having any issues with your account, please don't hesitate to contact us.",
-    "unable_to_send_otp" => "Unable to send the one-time verification code"
+    "unable_to_send_otp" => "Unable to send the one-time verification code",
+    "we_detected_a_new_device" => "We have detected a new login with your credentials from a new device or new browser",
+    "a_new_login_was_attempted" => "A new login was attempted from the following",
+    "if_you_did_not_make_this_change" => "If you did not make this change please contact our tech support immediately.",
+    "login_from_a_new_device_detected" => "Login from a new device detected",
+    "browser" => "Browser",
+    "date" => "Date",
+    "current_password_password" => "Current password is required",
+    "current_password_is_invalid" => "Current password is invalid",
+    "your_password_confirmation_doesnt_match" => "Your password confirmation does not match",
+    "access_to_this_field_is_forbidden" => "Access to this field is forbidden",
+    "invalid_language_locale" => "Invalid language locale",
+    "your_password_has_been_updated" => "Your password has been updated successfully",
+    "password_reset_confirmation" => "Password reset confirmation"
+
+    
+    
+    
+    
 ];

@@ -30,5 +30,18 @@ return [
     "your_account_has_been_created" => "Tu cuenta ha sido creada con exito",
     "welcome_to" => "Bienvenida a",
     "if_you_are_having_trouble" => "Si tiene algún problema con su cuenta, no dude en contactarnos.",
-    "unable_to_send_otp" => "No se pudo enviar el código de verificación único"
+    "unable_to_send_otp" => "No se pudo enviar el código de verificación único",
+    "we_detected_a_new_device" => "Hemos detectado un nuevo inicio de sesión con sus credenciales desde un nuevo dispositivo o navegador",
+    "a_new_login_was_attempted" => "se intentó un nuevo inicio de sesión desde",
+    "if_you_did_not_make_this_change" => "Si no realizó este cambio, comuníquese con nuestro soporte técnico de inmediato.",
+    "login_from_a_new_device_detected" => "Inicio de sesión desde un nuevo dispositivo detectado",
+    "browser" => "Navegador",
+    "date" => "Fecha",
+    "current_password_password" => "La contraseña actual es requerida",
+    "current_password_is_invalid" => "La contraseña actual es invalida",
+    "your_password_confirmation_doesnt_match" => "Your password confirmation does not match",
+    "access_to_this_field_is_forbidden" => "El acceso a este campo está prohibido",
+    "invalid_language_locale" => "Configuración regional de idioma invalida",
+    "your_password_has_been_updated" => "Su contraseña ha sido actualizada correctamente",
+    "password_reset_confirmation" => "Confirmación de restablecimiento de contraseña"
 ];

@@ -176,7 +176,7 @@
             {
                 if(!in_array($key, $tableFields))
                 {
-                return "Invalid value provided: {$key}";
+                    return "Invalid value provided: {$key}";
                 }
 
                 if($key == "password")

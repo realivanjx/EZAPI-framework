@@ -113,7 +113,7 @@
             #Validate against empty origin values while in production mode
             if(!isset($_SERVER["HTTP_ORIGIN"]) && EZENV["PRODUCTION"])
             {
-                $this->jsonResponse(400, [Constant::ERROR => self::httpResponseCode[400]]);
+                throw new ApiError (self::httpResponseCode[400]);
             }
 
             #Bypass HTTP_ORIGIN while in development mode by assigning the local IP address to the Origin.
@@ -125,20 +125,20 @@
             #Validate origins even while in development mode.
             if (!in_array($_SERVER["HTTP_ORIGIN"], ALLOWED_ORIGINS) && !ALLOW_ANY_API_ORIGIN)
             {
-                $this->jsonResponse(400, [Constant::ERROR => self::httpResponseCode[400]]);
+                throw new ApiError (self::httpResponseCode[400]);
             }
 
             #Validate request method
             if(isset($_SERVER["REQUEST_METHOD"]) && !in_array($_SERVER["REQUEST_METHOD"], $this->_allowedMethods))
             { 
                 #method not allowed
-                $this->jsonResponse(405, [Constant::ERROR => self::httpResponseCode[405]]);
+                throw new ApiError (self::httpResponseCode[405], 405);
             }
 
             #Make sure content type is present while in production mode.
             if (!isset($_SERVER["CONTENT_TYPE"]) && EZENV["PRODUCTION"])
             {
-                $this->jsonResponse(415, [Constant::ERROR => self::httpResponseCode[415]]);
+                throw new ApiError (self::httpResponseCode[415], 415);
             }
 
             #Overwrite Content type in development mode to JSON by default.
@@ -150,7 +150,7 @@
             #Validate content type
             if(isset($_SERVER["CONTENT_TYPE"]) && !in_array($_SERVER["CONTENT_TYPE"], $this->_allowedContentType))
             {
-                $this->jsonResponse(415, [Constant::ERROR => self::httpResponseCode[415]]);
+                throw new ApiError (self::httpResponseCode[415], 415);
             }
 
             #Build header array
@@ -167,7 +167,7 @@
             #Secure the connection with a valid SSL certificate on production.
             if(EZENV["PRODUCTION"] && EZENV["ENFORCE_SSL"] && $_SERVER["SERVER_PORT"] !== "443")
             {
-                $this->jsonResponse(495,  [Constant::ERROR => self::httpResponseCode[495]]);
+                throw new ApiError (self::httpResponseCode[495], 495);
             }
 
             #Ensure that headers are not already sent before assigning new headers.
@@ -189,7 +189,7 @@
          * @throws ApiError
          * @see Core\Dictionary for the list of content types  or http response codes
          */
-        public function jsonResponse(int $code, array $response) : void
+        public function jsonResponse(string $message = Constant::SUCCESS, array $response = [], int $code = 200) : void
         {
             #Validate response code
             if(!array_key_exists($code, self::httpResponseCode)) throw new ApiError (Constant::INVALID_HTTP_RESPONSE_CODE);
@@ -199,9 +199,16 @@
             
             #Add HTTP response code
             http_response_code($code);
+
+            $apiResponse = [Constant::MESSAGE => $message];
+
+            if(!empty($response))
+            {
+                $apiResponse[Constant::RESPONSE] = $response;
+            }
             
             #Convert to object
-            $response = json_encode($response);
+            $response = json_encode($apiResponse);
             
             #Return values
             exit($response);
