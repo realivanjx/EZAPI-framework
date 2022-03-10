@@ -12,7 +12,10 @@
   
 
   //polymorphism
- 
+  interface  IUserModel
+  {
+
+  }
 
     
   class UserModel extends Model
@@ -532,7 +535,7 @@
         if(!empty($validation)) throw new ApiError (serialize($validation));
         
         #Validate token
-        $validate = Token::validate($user->id, $input->token);
+        $validate = OTP::validate($user->id, $input->token);
 
         if($validate != Constant::SUCCESS)
         {

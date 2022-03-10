@@ -72,12 +72,12 @@
             {
                 if (is_scalar($value)) 
                 {
-                    $value = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
+                    $value = htmlspecialchars($value);
 
                     continue;
                 }
         
-                sanitize($value);
+                htmlspecialchars($value);
             }
         
             return $objectData;
@@ -89,7 +89,12 @@
          */
         public static function sanitizeGet(array $getData) : array
         {
-            return filter_input_array(INPUT_GET, $getData, FILTER_SANITIZE_STRING);
+            foreach($getData as $k => $value)
+            {
+                $value = htmlspecialchars($value);
+            }
+
+            return $getData;
         }
 
 
@@ -99,7 +104,12 @@
          */
         public static function sanitizePost(array $postData) : array
         {
-            return filter_input_array(INPUT_POST, $postData, FILTER_SANITIZE_STRING);
+            foreach($postData as $k => $value)
+            {
+                $value = htmlspecialchars($value);
+            }
+
+            return $postData;
         }
 
         

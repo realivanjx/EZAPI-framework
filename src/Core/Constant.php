@@ -27,4 +27,10 @@
         public const SUCCESS = "success";
         public const RESPONSE = "response";
         public const OTP_SENT = "otp_sent";
+        public const UNABLE_TO_SET_SESSION = "unable to set session";
+        public const MULTI_LOGIN_NOT_ALLOWED = "Multi login not allowed";
+        public const MAXIMUN_LOGIN_COUNT_REACHED = "You have reached the maximun login count";
+        public const INVALID_AGENT_TOOL = "Invalid agent tool";
+        public const BANNED_IP_ADDRESS = "Your ip address is banned";
+        
     }

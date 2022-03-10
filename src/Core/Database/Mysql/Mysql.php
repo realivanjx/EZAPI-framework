@@ -70,7 +70,7 @@
          * @param string table obtional 
          * @return array
          */
-        public function search(array $array, int $limit = 30, int $offset = 0, string $order = "id DESC", string $table = null) : array
+        public function search(array $array, int $limit = 30, int $offset = 0, string $order = "id DESC", string $table = null) : object
         {
             return $this->select([
                 "where" => key($array) . " like %?%",

@@ -173,9 +173,9 @@
             $this->htmlParameters["preHeader"] = $this->lang->translate("your_password_has_been_updated");
 
             #Fill the body parameter
-            $this->htmlParameters["body"] = sprintf("<h3>%s <strong>%s,</strong></h3>", $lang->translate("hello"), $name);
-            $this->htmlParameters["body"] .= sprintf("<p>%s</p><br>", $lang->translate("your_password_has_been_updated"));
-            $this->htmlParameters["body"] .= sprintf("<br><p>%s</p>", $lang->translate("if_you_did_not_make_this_change"));
+            $this->htmlParameters["body"] = sprintf("<h3>%s <strong>%s,</strong></h3>", $$this->lang->translate("hello"), $name);
+            $this->htmlParameters["body"] .= sprintf("<p>%s</p><br>", $this->lang->translate("your_password_has_been_updated"));
+            $this->htmlParameters["body"] .= sprintf("<br><p>%s</p>", $this->lang->translate("if_you_did_not_make_this_change"));
  
             #Send email
             if($this->send(
