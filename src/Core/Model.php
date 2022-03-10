@@ -2,7 +2,7 @@
     namespace Core;
     use Core\Database\Mysql\Mysql;
     use Core\Lang\Translator;
-
+    use \Exception;
 
     class Model
     {

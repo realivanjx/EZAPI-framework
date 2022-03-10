@@ -159,13 +159,13 @@
       #Check if username or email field is empty
       if(empty($input->username_or_email))
       {
-        throw new ApiError (serialize(["username_or_email" => $this->lang->translate("username_or_email_is_required")]));
+        throw new ApiError ("username_or_email_empty");
       }
 
       #Check if password field is empty
       if(empty($input->password))
       {
-        throw new ApiError (serialize(["password" => $this->lang->translate("password_is_required")]));
+        throw new ApiError ("password_empty");
       }
 
       #Check whether the user entered a valid email otherwise treat it as an username
@@ -174,22 +174,16 @@
       #Attempt to find the user in the database with the username or email provided
       $user =  $this->db->findFirst([$identifier => $input->username_or_email]);
  
-      #User not found
-      if(empty($user->$identifier))
+      #User not found or Invalid password
+      if(empty($user->$identifier) || !password_verify($input->password, $user->password))
       {
-        throw new ApiError (serialize(["username_or_email" => $this->lang->translate("invalid_username_or_email")]));
-      }
-      
-      #Invalid password
-      if(!password_verify($input->password, $user->password))
-      {
-        throw new ApiError (serialize(["password" => $this->lang->translate("invalid_password")]));
+        throw new ApiError ("invalid_username_or_password");
       }
 
       #Check if the user is banned
       if($user->status == self::STATUS_BANNED)
       {
-        throw new ApiError (serialize(["banned" => $this->lang->translate("account_banned")]));
+        throw new ApiError ("account_banned");
       }
 
       $test = new Mail();
@@ -220,7 +214,7 @@
           catch(Exception $ex)
           {
             #Unable to send OTP! Record deleted.
-            throw new ApiError (serialize(["OTP" =>  $this->lang->translate("unable_to_send_otp")]));
+            throw new ApiError ("unable_to_send_otp");
           }
           
           return Constant::OTP_SENT;
@@ -231,7 +225,7 @@
 
         if($tokenResp !== constant::SUCCESS)
         {
-          throw new ApiError (serialize(["OTP" => $this->lang->translate("invalid_otp")]));
+          throw new ApiError ("invalid_otp");
         }
 
         #activate account

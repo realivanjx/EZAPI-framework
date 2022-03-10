@@ -24,7 +24,6 @@
 
             #Load ezenv
             EZENV::load();
-
             
 
             #Get the path info from the browser
@@ -73,7 +72,7 @@
             * Before instantiating the requested method we first validate the user with the authentication 
             * system or verify that the requested method is in the allow  array.
             */
-            if(isset($_COOKIE[USER_SESSION_NAME]) && !Session::extend() ||
+            if(isset($_COOKIE[USER_SESSION_NAME]) && !Session::extend() && !RBAC::isViewAllow(Globals::$userRole, $route, $method)||
             !isset($_COOKIE[USER_SESSION_NAME]) && !RBAC::isViewAllow(Globals::$userRole, $route, $method))
             {
                 throw new ApiError(Constant::AUTH_REQUIRED, 401);

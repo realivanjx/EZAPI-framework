@@ -35,5 +35,3 @@ class SMTPFactory implements ISMTPFactory
         );
     }
 }
-
-?>

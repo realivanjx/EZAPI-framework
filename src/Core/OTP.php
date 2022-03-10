@@ -3,8 +3,8 @@
     use Core\Database\Mysql\Mysql;
     use Core\Helper;
     use Core\Constant;
+    use Exception;
 
-    
     class OTP 
     {
         #Database fields and table name
@@ -58,7 +58,7 @@
             ])) return $otp;
 
             #Something went wrong
-            throw new exception (Constant::ERROR_MESSAGE);
+            throw new Exception (Constant::ERROR_MESSAGE);
         }
 
 
@@ -71,10 +71,12 @@
         {
             self::initializeDB();
 
-            return self::$db->delete([
+             if(self::$db->delete([
                 "where" => "userId = ?",
                 "bind" => [$userId]
-            ]); 
+            ])) return true;
+
+            return false;
         }
 
 

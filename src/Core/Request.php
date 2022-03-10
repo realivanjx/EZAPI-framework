@@ -2,7 +2,7 @@
     namespace Core;
     use Exception;
     use Core\Constant;
-    use Core\Core\Exceptions\ApiError;
+    use Core\Exceptions\ApiError;
 
     class Request
     {

@@ -4,7 +4,7 @@
     use Core\lang\Translator;
     use Core\HtmlCompiler;
     use Core\Constant;
-
+    use Exception;
 
     class Mail
     { 
@@ -70,7 +70,7 @@
             #Send the email
             if(!$this->ezmail->send())
             {
-                throw new exception(Constant::UNABLE_TO_SEND);
+                throw new Exception(Constant::UNABLE_TO_SEND);
             }
         }
 
