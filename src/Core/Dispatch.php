@@ -58,7 +58,7 @@
             */
             if(!class_exists($route) || !method_exists($route, $method))
             {
-                echo "error 404";
+                 die("error 404");
                 //throw new ApiError(Dictionary::httpResponseCode[404]);
             }
 
