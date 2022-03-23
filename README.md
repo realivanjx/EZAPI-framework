@@ -1,2 +1,5 @@
-## start server
-php -S localhost:8080 -t .
+## Debug
+press F5 or run/start debugging
+
+## Start without debugging
+Terminal/Run Task/EZAPI server
