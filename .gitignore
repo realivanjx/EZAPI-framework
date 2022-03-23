@@ -1,0 +1,6 @@
+# Ignore
+.env.development
+.env.production
+notes
+composer.lock
+/vendor/

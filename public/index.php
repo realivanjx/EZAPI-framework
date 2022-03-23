@@ -67,6 +67,5 @@
     }
     catch(Exception $ex)
     {
-        echo "i hit an error";
-       // ErrorHandler::handler($ex);
+        echo "i hit an error " . $ex->getMessage();
     }

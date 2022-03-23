@@ -1,10 +1,8 @@
 <?php
     namespace Core;
-    use Core\Dictionary;
-    use Core\Exceptions\ApiError;
     use \ReflectionClass;
-    use ReflectionFunction;
-    
+    use \Exception;
+    use \Mapper;
 
     class Dispatch
     {
@@ -56,8 +54,8 @@
             */
             if(!class_exists($route) || !method_exists($route, $method))
             {
-                echo "error 400";
-                //throw new ApiError(Dictionary::httpResponseCode[400]);
+                echo "error 404";
+                //throw new ApiError(Dictionary::httpResponseCode[404]);
             }
 
               /**
@@ -67,47 +65,55 @@
 
              
             
-            $ref  = new ReflectionClass($route) ;
-
-
-//             die("wtf");
+           $ref  = new ReflectionClass($route);
             
-            
-//             $reflectionFunc = new ReflectionFunction($ref->getConstructor());
-// $reflectionParams = $reflectionFunc->getParameters();
-
-
-
-//            print_r($reflectionParams); die;
-//             
-
-            //  print_r( $ref->getConstructor()->getParameters());
-
-
-            //  die;
-
-            $instances = [];
+            $instance = (object)[];
             $constructor = $ref->getConstructor();
 
             if(!is_null($constructor))
             {
-                foreach ($ref->getConstructor()->getParameters() as $param) 
-                {                  
-    
-                    // // param type hint (or null, if not specified).
-                   $classToInject = $param->getClass()->name;
+                $instances = [];
 
-                   print_r(gettype($classToInject)); 
+                foreach ($ref->getConstructor()->getParameters() as $param) 
+                { 
+                   // param type hint (or null, if not specified).
+                   $classToInject = $param->getClass()->name;
    
                     if(!empty($classToInject) && !$param->isOptional())
                     {
-                        
-                       array_push($instances,   new $classToInject);
+                        if(interface_exists($classToInject))
+                        {
+                            if(!array_key_exists($classToInject, Mapper::$map))
+                            {
+                                throw new Exception("Interface not mapped " . $classToInject);
+                            }
+
+                            $currentInstance = new Mapper::$map[$classToInject];
+
+                            //Save instance
+                            array_push(Mapper::$instances,  $currentInstance);
+
+                            //Assign the parameter
+                            array_push($instances,  $currentInstance);
+                        }
+                        else if(class_exists($classToInject))
+                        { 
+                            $currentInstance = new $classToInject;
+
+                            //Save instance
+                            array_push(Mapper::$instances,  $currentInstance);
+
+                            array_push($instances,  $currentInstance);
+                        }  
                     }
                 }
-            }
 
-            $instance = $ref->newInstanceArgs($instances);
+                $instance = $ref->newInstanceArgs($instances);
+            }
+            else
+            {
+                $instance = $ref->newInstance();
+            }
             
             $instance->$method();
         }

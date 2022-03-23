@@ -1,0 +1,19 @@
+{
+    "name": "nerdtrix/ezapi",
+    "description": "EZAPI framework",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Core\\": "src/Core",
+            "Models\\": "src/Models",
+            "Routes\\": "src/Routes"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jerry Urena",
+            "email": "jerryurenaa@gmail.com"
+        }
+    ],
+    "require": {}
+}

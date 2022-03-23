@@ -14,7 +14,6 @@
 
         public function index() : void
         {
-            die("wtfffffffffffff");
             echo $this->m_userModel->login((object)[]);
         }
 

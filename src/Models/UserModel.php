@@ -3,30 +3,28 @@
   use Core\Model;
   use Models\IUserModel;
   
-
-  
- 
-
     
   class UserModel extends Model implements IUserModel
   {
     protected 
-        $table = "user",
-        $id,
-        $fName,
-        $lName,
-        $email,
-        $password,
-        $createdAt;
+      $table = "user",
+      $id,
+      $fName,
+      $lName,
+      $email,
+      $password,
+      $createdAt,
+      $updatedAt,
+      $deletedAt;
 
 
     public function login(object $input) : string
     {
-        return "klk wawawa ";
+        return "Hello from the user model login function";
     }
 
     public function register(object $input) : string
     {
-        return "";
+        return "register";
     }
   }
