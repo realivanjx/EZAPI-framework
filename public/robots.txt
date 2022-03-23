@@ -1,0 +1,5 @@
+# read more: https://www.robotstxt.org/
+
+# Disable all search engine robots because this is a server application.
+User-agent: *
+Disallow: /
