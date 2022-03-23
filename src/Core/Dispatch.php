@@ -3,6 +3,7 @@
     use \ReflectionClass;
     use \Exception;
     use \Mapper;
+    use \Config;
 
     class Dispatch
     {
@@ -12,8 +13,8 @@
          */
         public static function request() : void
         {
-            //Move to config
-            define("DEFAULT_ROUTE", "User");
+            #Load app config
+            Config::load();
 
 
             #Get the path info from the browser
@@ -30,7 +31,10 @@
              * please note that Route is a folder in src and the backslash cannot be changed for any reason
              * this is case sensitive because we are autoloading the classes.
              */
-            $route =  sprintf("Routes\%s", ucwords(empty($request[0]) && empty($request[1]) ? DEFAULT_ROUTE : $request[0]));
+            $route =  sprintf("Routes\%s", 
+                empty($request[0]) && empty($request[1]) ?
+                ucfirst(DEFAULT_ROUTE) : ucfirst($request[0])
+            );
 
             
             /**
