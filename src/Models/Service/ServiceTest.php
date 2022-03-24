@@ -1,9 +1,9 @@
 <?php
-    namespace Models;
+    namespace Models\Service;
     use Core\Model;
     use Models\IUserModel;
 
-    class MyAuthService extends Model implements IAuthService
+    class ServiceTest extends Model implements IServiceTest
     {
         private IUserModel $_userModel;
 
@@ -12,7 +12,7 @@
             $this->_userModel = $userModel;
         }
 
-        public function authenticate() : string
+        public function authenticate2() : string
         {
             print("\r\n<pre>This is a test from the parent class: " . $this->test . "\r\n<pre>");
 

@@ -6,3 +6,7 @@
 
 ## Start without debugging
 Terminal/Run Task/EZAPI server
+
+## Optional composer autoload
+- composer install
+- composer dump-autoload

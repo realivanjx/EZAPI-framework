@@ -1,7 +1,6 @@
 <?php
   namespace Models;
   use Core\Model;
-  use Models\IUserModel;
   
     
   class UserModel extends Model implements IUserModel

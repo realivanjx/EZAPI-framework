@@ -63,7 +63,8 @@
         //run middleware before dispatching
 
         #Dispatch request
-        Dispatch::request();
+        $initialize = new Dispatch();
+        $initialize->request();
     }
     catch(Exception $ex)
     {

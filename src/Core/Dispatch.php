@@ -2,8 +2,9 @@
     namespace Core;
     use \ReflectionClass;
     use \Exception;
-    use \Mapper;
-    use \Config;
+    use Src\Mapper;
+    use Src\Config;
+    use \ArgumentCountError;
 
     class Dispatch
     {
@@ -11,7 +12,7 @@
          * @method request
          * This is the entry point of our application.
          */
-        public static function request() : void
+        public function request() : void
         {
             #Load app config
             Config::load();
@@ -66,7 +67,6 @@
              * If all validations are passed We will pass the params to the method requested
              * and trigger the method as a new instance.
              */
-
              
             
            $ref  = new ReflectionClass($route);
@@ -80,6 +80,8 @@
 
                 foreach ($ref->getConstructor()->getParameters() as $param) 
                 { 
+                    $currentInstance = (object)[];
+
                    // param type hint (or null, if not specified).
                    $classToInject = $param->getClass()->name;
    
@@ -92,23 +94,34 @@
                                 throw new Exception("Interface not mapped " . $classToInject);
                             }
 
-                            $currentInstance = new Mapper::$map[$classToInject];
-
-                            //Save instance
-                            array_push(Mapper::$instances,  $currentInstance);
-
-                            //Assign the parameter
-                            array_push($instances,  $currentInstance);
+                            try
+                            {
+                                $currentInstance = new Mapper::$map[$classToInject];
+                            }
+                            catch(ArgumentCountError)
+                            {
+                                //Nested
+                                $currentInstance = $this->loadNested($classToInject);
+                            }
                         }
                         else if(class_exists($classToInject))
                         { 
-                            $currentInstance = new $classToInject;
-
-                            //Save instance
-                            array_push(Mapper::$instances,  $currentInstance);
-
-                            array_push($instances,  $currentInstance);
+                            try
+                            {
+                                $currentInstance = new $classToInject;
+                            }
+                            catch(ArgumentCountError)
+                            {
+                                //Nested
+                                $currentInstance = $this->loadNested($classToInject);
+                            }
                         }  
+
+                        //Save instance
+                        array_push(Mapper::$instances,  $currentInstance);
+
+                        //Assign param
+                        array_push($instances,  $currentInstance);
                     }
                 }
 
@@ -121,4 +134,43 @@
             
             $instance->$method();
         }
+
+        private function loadNested(string $classToInject) : object
+        {
+            $currentInstance = (object)[];
+
+            $ref  = new ReflectionClass(Mapper::$map[$classToInject]);
+            $constructor = $ref->getConstructor();
+
+            if(!is_null($constructor))
+            {
+                try
+                {
+                    foreach ($constructor->getParameters() as $param) 
+                    {
+                        $nestedClass = $param->getClass()->name;
+
+                        if(interface_exists($nestedClass))
+                        {
+                            
+                            $currentInstance = new Mapper::$map[$classToInject](new Mapper::$map[$nestedClass]);
+                            
+                        }
+                        else if(class_exists($classToInject))
+                        { 
+                            
+                            $currentInstance = new $classToInject(new $nestedClass);
+                        }  
+                    }
+                }
+                catch(ArgumentCountError)
+                {
+                    //Nested
+                    throw new Exception("Only one level nested is supported!");
+                }
+            }
+
+            return $currentInstance;
+        }
     }
+  

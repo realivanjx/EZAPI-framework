@@ -4,8 +4,10 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
+            "Src\\": "src",
             "Core\\": "src/Core",
             "Models\\": "src/Models",
+            "Models\\Service\\": "src/Models/Service",
             "Routes\\": "src/Routes"
         }
     },

@@ -1,11 +1,9 @@
 <?php
+    namespace Models;
 
-namespace Models;
-
-
-interface IAuthService
-{
-    public function authenticate() : string;
-}
+    interface IAuthService
+    {
+        public function authenticate() : string;
+    }
 
 ?>
