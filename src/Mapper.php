@@ -4,7 +4,8 @@
     class Mapper
     {
         public static $map = [
-            "Models\IUserModel" => "Models\UserModel"
+            "Models\IUserModel" => "Models\UserModel",
+            "Models\IAuthService" => "Models\MyAuthService"
         ];
 
         //This will hold the instantiated instances within the constructor

@@ -1,20 +1,20 @@
 <?php
     namespace Routes;
     use Core\Router;
-    use Models\IUserModel;
+    use Models\IAuthService;
 
     class User extends Router
     {
-        protected $m_userModel;
+        protected $_authService;
 
-        public function __construct(IUserModel $userModel)
+        public function __construct(IAuthService $authService)
         {
-            $this->m_userModel = $userModel;
+            $this->_authService = $authService;
         }
 
         public function index() : void
         {
-            echo $this->m_userModel->login((object)[]);
+            echo $this->_authService->login();
         }
 
        
