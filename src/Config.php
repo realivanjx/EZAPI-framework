@@ -1,7 +1,6 @@
 <?php
     namespace Src;
 
-
     class Config
     {
         public static function load() : void
