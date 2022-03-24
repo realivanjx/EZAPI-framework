@@ -1,11 +1,12 @@
 ## Debug
-- Install the extension xdebug
-- Download and install xampp for PHP or configure docker with PHP 8.1
-- follow the instructions in xdebug config regarding https://xdebug.org/wizard
-- Once the xdebug has been correctly configure you can press F5 or run/start debugging to start debugging. 
+- Install the extension named 'xdebug' for php
+- Download and install xampp or configure docker with PHP 8.1 or later
+- follow the instructions in the xdebug config regarding https://xdebug.org/wizard
+- run the following command to ensure xdebug is correctly installed `php -v`. If you see the xdebug name there then you are good to go.
+- Once the xdebug has been correctly configure you can press F5 or go to run/start debugging to start debugging. 
 
 ## Start without debugging
-Terminal/Run Task/EZAPI server
+To to Terminal/Run Task/EZAPI server
 
 ## Optional composer autoload
 - composer install
