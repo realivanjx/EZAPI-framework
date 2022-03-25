@@ -81,9 +81,9 @@
                 foreach ($ref->getConstructor()->getParameters() as $param) 
                 { 
                     $currentInstance = (object)[];
+                
+                   $classToInject = $param->getType()->getName();
 
-                   // param type hint (or null, if not specified).
-                   $classToInject = $param->getClass()->name;
    
                     if(!empty($classToInject) && !$param->isOptional())
                     {
@@ -139,7 +139,9 @@
         {
             $currentInstance = (object)[];
 
-            $ref  = new ReflectionClass(Mapper::$map[$classToInject]);
+            $dispatchClass = $this->getMapClass($classToInject);
+
+            $ref  = new ReflectionClass($dispatchClass);
             $constructor = $ref->getConstructor();
 
             if(!is_null($constructor))
@@ -148,18 +150,18 @@
                 {
                     foreach ($constructor->getParameters() as $param) 
                     {
-                        $nestedClass = $param->getClass()->name;
+                        $nestedClass = $param->getType()->getName();
 
                         if(interface_exists($nestedClass))
                         {
+                            $injectInstance = $this->getMapClass($classToInject);
+                            $injectParamInstance = $this->getMapClass($nestedClass);
                             
-                            $currentInstance = new Mapper::$map[$classToInject](new Mapper::$map[$nestedClass]);
-                            
+                            $currentInstance =  new $injectInstance(new $injectParamInstance);
                         }
                         else if(class_exists($classToInject))
-                        { 
-                            
-                            $currentInstance = new $classToInject(new $nestedClass);
+                        {                             
+                            $currentInstance =  new $classToInject(new $nestedClass);
                         }  
                     }
                 }
@@ -171,6 +173,16 @@
             }
 
             return $currentInstance;
+        }
+
+        private function getMapClass(string $name) : string
+        {
+            if(array_key_exists($name, Mapper::$map))
+            {
+                return Mapper::$map[$name];
+            }
+
+            return $name;
         }
     }
   
