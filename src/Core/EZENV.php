@@ -15,14 +15,20 @@
             $fileName = $isProduction ? ".env.production" : ".env.development";
 
             #Open the .env file and read it
-            $dotEnvFile = new SplFileObject(
-                sprintf("%s%s%s",
-                    ROOT_DIR,
-                    SLASH,
-                    $fileName
-                )
-            );
+            $filePath = sprintf("%s%s%s", ROOT_DIR, SLASH, $fileName);
 
+            
+            #Recreate the files if they don't exists
+            if(!file_exists($filePath))
+            {   
+                $defaultFilePath = sprintf("%s%s.env.example", ROOT_DIR, SLASH);
+
+                $defaultContent = file_get_contents($defaultFilePath);
+
+                file_put_contents($filePath , $defaultContent);
+            }
+
+            $dotEnvFile = new SplFileObject($filePath);
 
             #contains the parse values
             $env = [];

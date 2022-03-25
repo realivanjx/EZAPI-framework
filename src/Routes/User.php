@@ -1,7 +1,7 @@
 <?php
     namespace Routes;
     use Core\Router;
-    use Models\IAuthService;
+    use Models\{IAuthService, ISuperAuthService};
     use Models\Service\IServiceTest;
 
 use function Core\EZENV;
