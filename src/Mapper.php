@@ -6,7 +6,9 @@
         IUserModel, 
         UserModel, 
         IAuthService, 
-        MyAuthService
+        MyAuthService,
+        ISuperAuthService, 
+        SuperAuthService
     };
 
     use Models\Service\{
@@ -19,6 +21,7 @@
         public static $map = [
             IUserModel::class =>  UserModel::class,
             IAuthService::class =>  MyAuthService::class,
+            ISuperAuthService::class =>  SuperAuthService::class,
             IServiceTest::class => ServiceTest::class
         ];
 

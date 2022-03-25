@@ -8,10 +8,10 @@ use function Core\EZENV;
 
     class User extends Router
     {
-        protected IAuthService $_authService;
+        protected ISuperAuthService $_authService;
         protected IServiceTest $_authTest;
 
-        public function __construct(IAuthService $authService, IServiceTest $authService2)
+        public function __construct(ISuperAuthService $authService, IServiceTest $authService2)
         {
             $this->_authService = $authService;
 
