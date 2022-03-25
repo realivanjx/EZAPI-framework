@@ -1,10 +1,10 @@
 <?php
     namespace Core;
-    use \ReflectionClass;
-    use \Exception;
-    use Src\Mapper;
-    use Src\Config;
-    use \ArgumentCountError;
+    use ReflectionClass;
+    use Exception;
+    use ArgumentCountError;
+    use Src\{Mapper, Config};
+    
 
     class Dispatch
     {
@@ -16,6 +16,9 @@
         {
             #Load app config
             Config::load();
+
+            #Load EZENV config
+            EZENV::load(PRODUCTION);
 
 
             #Get the path info from the browser

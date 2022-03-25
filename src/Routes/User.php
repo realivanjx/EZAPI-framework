@@ -4,6 +4,8 @@
     use Models\IAuthService;
     use Models\Service\IServiceTest;
 
+use function Core\EZENV;
+
     class User extends Router
     {
         protected IAuthService $_authService;
@@ -24,6 +26,7 @@
         //Call localhost:8080/user/ or localhost:8080/ or localhost:8080/user/index   to execute
         public function index() : void
         {            
+            print("Welcome to " . EZENV["APP_NAME"] . " Version " . EZENV("APP_VERSION")); //ezenv can be used in both ways
             echo $this->_authService->authenticate();
 
             die("\r\n<pre>This is a test from the parent class: " . $this->test);

@@ -10,5 +10,7 @@
             define("SRC_DIR", dirname(__DIR__));
 
             define("DEFAULT_ROUTE", "User");
+
+            define("PRODUCTION", false);
         }
     }
