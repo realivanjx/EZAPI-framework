@@ -8,6 +8,8 @@
 
     class Dispatch
     {
+        private array $map = [];
+        private string $currentRouteClass = "";
         /**
          * @method request
          * This is the entry point of our application.
@@ -70,122 +72,97 @@
              * If all validations are passed We will pass the params to the method requested
              * and trigger the method as a new instance.
              */
-             
-            
-           $ref  = new ReflectionClass($route);
-            
-            $instance = (object)[];
-            $constructor = $ref->getConstructor();
 
-            if(!is_null($constructor))
+            $ref  = new ReflectionClass($route);
+
+            
+             $this->currentRouteClass = $route;
+            // $this->map[$route] = $this->currentRouteClass;
+            $paramers = $this->recursiveParams($route);
+
+           print_r(json_encode($this->map)); die;
+            if(count($paramers)) 
             {
-                $instances = [];
-
-                foreach ($ref->getConstructor()->getParameters() as $param) 
-                { 
-                    $currentInstance = (object)[];
-                
-                   $classToInject = $param->getType()->getName();
-
-   
-                    if(!empty($classToInject) && !$param->isOptional())
-                    {
-                        if(interface_exists($classToInject))
-                        {
-                            if(!array_key_exists($classToInject, Mapper::$map))
-                            {
-                                throw new Exception("Interface not mapped " . $classToInject);
-                            }
-
-                            try
-                            {
-                                $currentInstance = new Mapper::$map[$classToInject];
-                            }
-                            catch(ArgumentCountError)
-                            {
-                                //Nested
-                                $currentInstance = $this->loadNested($classToInject);
-                            }
-                        }
-                        else if(class_exists($classToInject))
-                        { 
-                            try
-                            {
-                                $currentInstance = new $classToInject;
-                            }
-                            catch(ArgumentCountError)
-                            {
-                                //Nested
-                                $currentInstance = $this->loadNested($classToInject);
-                            }
-                        }  
-
-                        //Save instance
-                        array_push(Mapper::$instances,  $currentInstance);
-
-                        //Assign param
-                        array_push($instances,  $currentInstance);
-                    }
-                }
-
-                $instance = $ref->newInstanceArgs($instances);
+                $routeInstance = $ref->newInstanceArgs($paramers);
             }
             else
             {
-                $instance = $ref->newInstance();
+                $routeInstance = $ref->newInstance();
             }
-            
-            $instance->$method();
+
+            #Execute
+            $routeInstance->$method();
         }
 
-        private function loadNested(string $classToInject) : object
+       
+
+
+
+        private function recursiveParams(string $className) : array
         {
-            $currentInstance = (object)[];
-
-            $dispatchClass = $this->getMapClass($classToInject);
-
-            $ref  = new ReflectionClass($dispatchClass);
-            $constructor = $ref->getConstructor();
-
-            if(!is_null($constructor))
+            $hasMore = [];
+            
+            while(true)
             {
-                try
+                if(array_key_exists($className, Mapper::$map))
                 {
-                    foreach ($constructor->getParameters() as $param) 
-                    {
-                        $nestedClass = $param->getType()->getName();
+                    $className = Mapper::$map[$className];
+                }
 
-                        if(interface_exists($nestedClass))
+                $ref  = new ReflectionClass($className);
+                $constructor = $ref->getConstructor();
+
+    
+                if(is_null($constructor)) continue;
+                
+               
+                $parameters = $constructor->getParameters();
+
+                foreach ($parameters as $paramer) 
+                {
+                    $classToInject = $paramer->getType()->getName();
+
+                    if(empty($classToInject) || $paramer->isOptional()) continue;    
+
+
+                    if(interface_exists($classToInject))
+                    {
+                        if(!array_key_exists($classToInject, Mapper::$map))
                         {
-                            $injectInstance = $this->getMapClass($classToInject);
-                            $injectParamInstance = $this->getMapClass($nestedClass);
-                            
-                            $currentInstance =  new $injectInstance(new $injectParamInstance);
+                            throw new Exception("Interface not mapped " . $classToInject);
                         }
-                        else if(class_exists($classToInject))
-                        {                             
-                            $currentInstance =  new $classToInject(new $nestedClass);
-                        }  
+
+                        $mappedClass = Mapper::$map[$classToInject];
+
+                        $this->map[$this->currentRouteClass][$className][] = $mappedClass;                       
+                        
+                        //check if more exitsts
+                         $hasMore = $this->recursiveParams($mappedClass);
+
+                        if(!empty($hasMore))
+                        {
+                            $this->map[$this->currentRouteClass][$mappedClass][] = $hasMore;
+                        }
+                    }
+                    else if(class_exists($classToInject))
+                    {
+                        $this->map[$this->currentRouteClass][$className][] = $classToInject;
+
+                        $hasMore = $this->recursiveParams($classToInject);
+
+                       if(!empty($hasMore))
+                       {
+                            $this->map[$this->currentRouteClass][$classToInject][] = $hasMore;
+                       }
                     }
                 }
-                catch(ArgumentCountError)
-                {
-                    //Nested
-                    throw new Exception("Only one level nested is supported!");
-                }
+
+                break;
+
             }
-
-            return $currentInstance;
-        }
-
-        private function getMapClass(string $name) : string
-        {
-            if(array_key_exists($name, Mapper::$map))
-            {
-                return Mapper::$map[$name];
-            }
-
-            return $name;
+            
+            // print_r($hasMore);die;
+            return $hasMore ;
         }
     }
   
