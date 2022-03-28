@@ -76,8 +76,8 @@
             $ref  = new ReflectionClass($route);
 
             
-             $this->currentRouteClass = $route;
-            // $this->map[$route] = $this->currentRouteClass;
+            
+            $this->currentRouteClass = $route;
             $paramers = $this->recursiveParams($route);
 
            print_r(json_encode($this->map)); die;
@@ -129,31 +129,22 @@
                     {
                         if(!array_key_exists($classToInject, Mapper::$map))
                         {
-                            throw new Exception("Interface not mapped " . $classToInject);
+                            throw new Exception("Interface class not mapped: " . $classToInject);
                         }
 
-                        $mappedClass = Mapper::$map[$classToInject];
-
-                        $this->map[$this->currentRouteClass][$className][] = $mappedClass;                       
-                        
-                        //check if more exitsts
-                         $hasMore = $this->recursiveParams($mappedClass);
-
-                        if(!empty($hasMore))
-                        {
-                            $this->map[$this->currentRouteClass][$mappedClass][] = $hasMore;
-                        }
+                        $classToInject = Mapper::$map[$classToInject];
                     }
-                    else if(class_exists($classToInject))
+
+
+                    
+                    $this->map[$className][] = $classToInject;                       
+                        
+                    // //check if more exitsts
+                    $this->recursiveParams($classToInject);
+
+                    if(!empty($hasMore))
                     {
-                        $this->map[$this->currentRouteClass][$className][] = $classToInject;
-
-                        $hasMore = $this->recursiveParams($classToInject);
-
-                       if(!empty($hasMore))
-                       {
-                            $this->map[$this->currentRouteClass][$classToInject][] = $hasMore;
-                       }
+                        //$this->map[$this->currentRouteClass][$classToInject] = $hasMore;
                     }
                 }
 
