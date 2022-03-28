@@ -9,7 +9,7 @@
     class Dispatch
     {
         private array $map = [];
-        private string $currentRouteClass = "";
+
         /**
          * @method request
          * This is the entry point of our application.
@@ -75,15 +75,11 @@
 
             $ref  = new ReflectionClass($route);
 
-            
-            
-            $this->currentRouteClass = $route;
-            $paramers = $this->recursiveParams($route);
+            $this->recursiveParams($route);
 
-           print_r(json_encode($this->map)); die;
-            if(count($paramers)) 
+            if(count($this->map)) 
             {
-                $routeInstance = $ref->newInstanceArgs($paramers);
+                $routeInstance = $ref->newInstanceArgs($this->map);
             }
             else
             {
@@ -93,67 +89,85 @@
             #Execute
             $routeInstance->$method();
         }
+        
 
-       
-
-
-
-        private function recursiveParams(string $className) : array
+        private function recursiveParams(string $routeClass) 
         {
-            $hasMore = [];
-            
-            while(true)
-            {
-                if(array_key_exists($className, Mapper::$map))
-                {
-                    $className = Mapper::$map[$className];
-                }
+            $ref  = new ReflectionClass($routeClass);
+            $constructor = $ref->getConstructor();
 
-                $ref  = new ReflectionClass($className);
-                $constructor = $ref->getConstructor();
-
-    
-                if(is_null($constructor)) continue;
-                
+            if(is_null($constructor)) return;
                
-                $parameters = $constructor->getParameters();
+            $parameters = $constructor->getParameters();
 
-                foreach ($parameters as $paramer) 
+            foreach ($parameters as $paramer) 
+            {
+                $classToInject = $paramer->getType()->getName();
+
+                if(empty($classToInject) || $paramer->isOptional()) continue;  
+
+                if(interface_exists($classToInject))
                 {
-                    $classToInject = $paramer->getType()->getName();
-
-                    if(empty($classToInject) || $paramer->isOptional()) continue;    
-
-
-                    if(interface_exists($classToInject))
+                    if(!array_key_exists($classToInject, Mapper::$map))
                     {
-                        if(!array_key_exists($classToInject, Mapper::$map))
-                        {
-                            throw new Exception("Interface class not mapped: " . $classToInject);
-                        }
-
-                        $classToInject = Mapper::$map[$classToInject];
+                        throw new Exception("Interface class not mapped: " . $classToInject);
                     }
 
-
-                    
-                    $this->map[$className][] = $classToInject;                       
-                        
-                    // //check if more exitsts
-                    $this->recursiveParams($classToInject);
-
-                    if(!empty($hasMore))
-                    {
-                        //$this->map[$this->currentRouteClass][$classToInject] = $hasMore;
-                    }
+                    $classToInject = Mapper::$map[$classToInject];
                 }
 
-                break;
+                try
+                {
+                    $this->map[] =  new $classToInject;
+                }
+                catch(ArgumentCountError)
+                {
+                    $args = $this->getParamList($classToInject);
 
+                    $ref  = new ReflectionClass($classToInject);
+
+                    $this->map[] =  $ref->newInstanceArgs($args);
+                }
             }
-            
-            // print_r($hasMore);die;
-            return $hasMore ;
+        }
+
+        private function getParamList(string $className) : array
+        {
+            $params = [];
+
+            $ref  = new ReflectionClass($className);
+            $constructor = $ref->getConstructor();
+
+            $parameters = $constructor->getParameters();
+
+            foreach ($parameters as $paramer) 
+            {
+                $classToInject = $paramer->getType()->getName();
+
+                if(empty($classToInject) || $paramer->isOptional()) continue;  
+
+                if(interface_exists($classToInject))
+                {
+                    if(!array_key_exists($classToInject, Mapper::$map))
+                    {
+                        throw new Exception("Interface class not mapped: " . $classToInject);
+                    }
+
+                    $classToInject = Mapper::$map[$classToInject];
+                }
+
+                try
+                {
+                    $params[] =  new $classToInject;
+                }
+                catch(ArgumentCountError)
+                {
+                    throw new Exception("Only one level nested supported");
+                }
+            }
+
+            return $params;
+
         }
     }
   

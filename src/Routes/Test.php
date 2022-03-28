@@ -9,10 +9,11 @@
         protected IAuthService $_authService;
         protected IUserModel $_authTest;
 
-        public function __construct()
+        public function __construct(IUserModel $userModel, IAuthService $authService)
         {
-            $this->_authTest = new UserModel();
-            $this->_authService =  new MyAuthService($this->_authTest);
+            $this->_authTest = $userModel;
+           // $this->_authService =  new MyAuthService($this->_authTest);
+           $this->_authService =  $authService;
         }
 
         //Framework URL PROTOCOL terminology is domain/Class/Function or domain:port/Class name/Function name 
