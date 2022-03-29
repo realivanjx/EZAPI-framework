@@ -8,9 +8,9 @@
 
     public string $test = "Router"; 
 
-    public function __construct() 
+    public function __construct(IRequest $request) 
     {
-     
+      $this->request = $request;
     }
 
     public function __destruct()

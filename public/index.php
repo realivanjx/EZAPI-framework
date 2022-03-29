@@ -1,6 +1,7 @@
 <?php
     namespace EZAPIFRAMEWORK;
     use \Exception;
+    use \TypeError;
     use Core\Dispatch;
   
 
@@ -63,10 +64,13 @@
         //run middleware before dispatching
 
         #Dispatch request
-        $initialize = new Dispatch();
-        $initialize->request();
+        (new Dispatch)->request();
     }
     catch(Exception $ex)
+    {
+        echo $ex->getMessage();
+    }
+    catch(TypeError $ex)
     {
         echo $ex->getMessage();
     }

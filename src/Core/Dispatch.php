@@ -1,15 +1,11 @@
 <?php
     namespace Core;
-    use ReflectionClass;
-    use Exception;
-    use ArgumentCountError;
-    use Src\{Mapper, Config};
+    use Core\DI;
+    use Src\{Config};
     
 
     class Dispatch
     {
-        private array $map = [];
-
         /**
          * @method request
          * This is the entry point of our application.
@@ -17,10 +13,10 @@
         public function request() : void
         {
             #Load app config
-            Config::load();
+            (new Config)->load();
 
             #Load EZENV config
-            EZENV::load(PRODUCTION);
+            (new EZENV)->load(PRODUCTION);
 
 
             #Get the path info from the browser
@@ -37,7 +33,8 @@
              * please note that Route is a folder in src and the backslash cannot be changed for any reason
              * this is case sensitive because we are autoloading the classes.
              */
-            $route =  sprintf("Routes\%s", 
+            $route =  sprintf("%s\%s", 
+                DEFAULT_ROUTE_DIRECTORY,
                 empty($request[0]) && empty($request[1]) ?
                 ucfirst(DEFAULT_ROUTE) : ucfirst($request[0])
             );
@@ -73,101 +70,10 @@
              * and trigger the method as a new instance.
              */
 
-            $ref  = new ReflectionClass($route);
+            $routeInstance = (new DI)->inject($route);
 
-            $this->recursiveParams($route);
+            $requestData = (new Request)->data();
 
-            if(count($this->map)) 
-            {
-                $routeInstance = $ref->newInstanceArgs($this->map);
-            }
-            else
-            {
-                $routeInstance = $ref->newInstance();
-            }
-
-            #Execute
-            $routeInstance->$method();
-        }
-        
-
-        private function recursiveParams(string $routeClass) 
-        {
-            $ref  = new ReflectionClass($routeClass);
-            $constructor = $ref->getConstructor();
-
-            if(is_null($constructor)) return;
-               
-            $parameters = $constructor->getParameters();
-
-            foreach ($parameters as $paramer) 
-            {
-                $classToInject = $paramer->getType()->getName();
-
-                if(empty($classToInject) || $paramer->isOptional()) continue;  
-
-                if(interface_exists($classToInject))
-                {
-                    if(!array_key_exists($classToInject, Mapper::$map))
-                    {
-                        throw new Exception("Interface class not mapped: " . $classToInject);
-                    }
-
-                    $classToInject = Mapper::$map[$classToInject];
-                }
-
-                try
-                {
-                    $this->map[] =  new $classToInject;
-                }
-                catch(ArgumentCountError)
-                {
-                    $args = $this->getParamList($classToInject);
-
-                    $ref  = new ReflectionClass($classToInject);
-
-                    $this->map[] =  $ref->newInstanceArgs($args);
-                }
-            }
-        }
-
-        private function getParamList(string $className) : array
-        {
-            $params = [];
-
-            $ref  = new ReflectionClass($className);
-            $constructor = $ref->getConstructor();
-
-            $parameters = $constructor->getParameters();
-
-            foreach ($parameters as $paramer) 
-            {
-                $classToInject = $paramer->getType()->getName();
-
-                if(empty($classToInject) || $paramer->isOptional()) continue;  
-
-                if(interface_exists($classToInject))
-                {
-                    if(!array_key_exists($classToInject, Mapper::$map))
-                    {
-                        throw new Exception("Interface class not mapped: " . $classToInject);
-                    }
-
-                    $classToInject = Mapper::$map[$classToInject];
-                }
-
-                try
-                {
-                    $params[] =  new $classToInject;
-                }
-                catch(ArgumentCountError)
-                {
-                    throw new Exception("Only one level nested supported");
-                }
-            }
-
-            return $params;
-
+            $routeInstance->$method($requestData);
         }
     }
-  

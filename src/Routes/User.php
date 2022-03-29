@@ -1,7 +1,7 @@
 <?php
     namespace Routes;
     use Core\Router;
-    use Models\{IAuthService, ISuperAuthService};
+    use Models\{ISuperAuthService};
     use Models\Service\IServiceTest;
 
 use function Core\EZENV;
@@ -33,7 +33,7 @@ use function Core\EZENV;
         }
 
         //Call localhost:8080/user/auth  to execute
-        public function auth() : void
+        public function auth(object $post) : void
         {
             
             echo $this->_authTest->authenticate2();

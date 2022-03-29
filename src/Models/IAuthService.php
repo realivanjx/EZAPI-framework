@@ -4,6 +4,7 @@
     interface IAuthService
     {
         public function authenticate() : string;
+        
     }
 
 ?>

@@ -9,7 +9,7 @@
          * EZENV is one of many unique features that EZAPI offers. 
          * With this feature you are able to use enviroment variables natively.
          */
-        public static function load(bool $isProduction) : void
+        public function load(bool $isProduction) : void
         {
             #use the production .env by default.
             $fileName = $isProduction ? ".env.production" : ".env.development";
