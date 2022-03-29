@@ -3,17 +3,8 @@
     
     //No namespace needed in the root dir
     use Models\{
-        IUserModel, 
-        UserModel, 
-        IAuthService, 
-        MyAuthService,
-        ISuperAuthService, 
-        SuperAuthService
-    };
-
-    use Models\Service\{
-        IServiceTest, 
-        ServiceTest
+        IAuthService,
+        AuthService
     };
 
     enum InstanceType
@@ -26,26 +17,15 @@
     class Mapper
     {
         public static $map = [
-            IUserModel::class =>  UserModel::class,
-            IAuthService::class =>  MyAuthService::class,
-            ISuperAuthService::class =>  SuperAuthService::class,
-            IServiceTest::class => ServiceTest::class
+            IAuthService::class =>  AuthService::class
         ];
 
 
         //Test
         public static $mapTest = [
-            IUserModel::class =>  [
-                UserModel::class,
-                InstanceType::transient
-            ],
             IAuthService::class =>  [
-                MyAuthService::class,
-                InstanceType::request
-            ],
-            ISuperAuthService::class =>  [
-                SuperAuthService::class,
-                InstanceType::singleton
+                AuthService::class,
+                InstanceType::transient
             ]
         ];
 

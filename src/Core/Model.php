@@ -1,6 +1,8 @@
 <?php
     namespace Core;
 
+    
+
     //this class contains all shared instances and functions across all models
     class Model
     {

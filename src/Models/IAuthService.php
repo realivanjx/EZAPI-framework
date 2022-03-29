@@ -3,8 +3,7 @@
 
     interface IAuthService
     {
-        public function authenticate() : string;
-        
+        public function authenticate(object $input) : string;
+        public function register(object $input) : string;
     }
-
 ?>

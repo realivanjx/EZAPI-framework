@@ -3,7 +3,7 @@
   use Core\Model;
   
     
-  class UserModel extends Model implements IUserModel
+  class AuthService extends Model implements IAuthService
   {
     protected 
       $table = "user",
@@ -17,7 +17,7 @@
       $deletedAt;
 
 
-    public function login(object $input) : string
+    public function authenticate(object $input) : string
     {
         return "Hello from the user model login function";
     }

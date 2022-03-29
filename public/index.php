@@ -68,9 +68,9 @@
     }
     catch(Exception $ex)
     {
-        echo $ex->getMessage();
+        print_r($ex);
     }
     catch(TypeError $ex)
     {
-        echo $ex->getMessage();
+        print_r($ex);
     }

@@ -1,7 +1,7 @@
 <?php
     namespace Core;
     use Core\DI;
-    use Src\{Config};
+    use Src\Config;
     
 
     class Dispatch
