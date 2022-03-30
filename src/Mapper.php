@@ -2,7 +2,9 @@
     namespace Src;
     
     //No namespace needed in the root dir
-    use Models\{
+
+use Core\Database\Mysql\{IMysqlQuery, MysqlQuery};
+use Models\{
         IAuthService,
         AuthService
     };
@@ -17,7 +19,8 @@
     class Mapper
     {
         public static $map = [
-            IAuthService::class =>  AuthService::class
+            IAuthService::class =>  AuthService::class,
+            IMysqlQuery::class => MysqlQuery::class
         ];
 
 

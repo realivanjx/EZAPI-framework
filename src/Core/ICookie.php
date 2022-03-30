@@ -3,7 +3,7 @@
 
     interface ICookie
     {
-        static function set(
+        function set(
             string $name,
             string $value,
             int $cookieExpiration, 
@@ -12,12 +12,13 @@
             bool $secure = false, 
             bool $httpOnly = true ) : bool;
 
-        static function get(string $name) : string;
 
-        static function exists(string $name) : bool;
+        function get(string $name) : string;
 
-        static function delete(string $name) : bool;
+        function exists(string $name) : bool;
 
-        static function deleteAll(string $skip = null) : void;
+        function delete(string $name) : bool;
+
+        function deleteAll(string $skip = null) : void;
     }
 ?>

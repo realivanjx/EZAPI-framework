@@ -1,5 +1,7 @@
 <?php
     namespace Routes;
+
+    use Core\Exceptions\ApiError;
     use Core\Router;
     use Models\{IAuthService};
 
@@ -10,7 +12,6 @@
         public function __construct(IAuthService $authService)
         {
             $this->_authService = $authService;
-
         }
 
         //Framework URL PROTOCOL terminology is domain/Class/Function or domain:port/Class name/Function name 

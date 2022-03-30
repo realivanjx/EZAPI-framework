@@ -1,5 +1,6 @@
 <?php
     namespace Core;
+    use Core\Database\Mysql\IMysqlQuery;
 
     
 
@@ -8,15 +9,13 @@
     {
         public $db; //instance
 
-        public string $test = "Model"; 
-
-        public function __construct() 
+        public function __construct(IMysqlQuery $mysqlQuery) 
         {
-            
+            $this->db = $mysqlQuery;
         }
 
         public function __destruct()
         {
-          
+          $this->db = null;
         }
     }

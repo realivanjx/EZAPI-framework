@@ -4,5 +4,7 @@
     interface IRequest
     {
         function data() : mixed;
+        
+        function response(int $code, mixed $response) : void;
     }
 ?>

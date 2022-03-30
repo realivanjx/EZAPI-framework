@@ -10,7 +10,7 @@
          * @param boolean httpOnly
          * @return boolean
          */
-        public static function set(
+        public function set(
             string $name,
             string $value,
             int $cookieExpiration, 
@@ -44,7 +44,7 @@
          * @param string name
          * @return string
          */
-        public static function get(string $name) : string 
+        public  function get(string $name) : string 
         {
             if(!empty($name) && self::exists($name))
             {
@@ -60,7 +60,7 @@
          * @param string name
          * @return string
          */
-        public static function exists(string $name) : bool 
+        public function exists(string $name) : bool 
         {
             if(!empty($name) && isset($_COOKIE[$name]))
             {
@@ -77,7 +77,7 @@
          * @param int expire (by default 1 year ago)
          * @return boolean
          */
-        public static function delete(string $name) : bool
+        public function delete(string $name) : bool
         {
             if(!empty($name) && self::exists($name))
             {
@@ -102,7 +102,7 @@
          * @comment this method will delete all the cookies. 
          * IF the param skip is not null it will skip the specified cookie if it exists.
          */
-        public static function deleteAll(string $skip = null) : void
+        public function deleteAll(string $skip = null) : void
         {
             #delete all except skip
             foreach ($_COOKIE as $key => $value )

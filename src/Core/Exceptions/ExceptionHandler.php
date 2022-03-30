@@ -1,15 +1,12 @@
 <?php
     namespace Core\Exceptions;
     use \Exception;
-    use Core\IRequest;
 
-    class ExceptionHandler extends Exception
-    {
-        public $request;
 
-        public function __construct(IRequest $request)
+    class ExceptionHandler extends Exception 
+    {    
+        public function __construct(string $message, int $code)
         {
-            $this->request = $request;
+            parent::__construct($message, $code);
         }
-        
     }

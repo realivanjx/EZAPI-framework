@@ -12,6 +12,16 @@
             define("DEFAULT_ROUTE_DIRECTORY", "Routes");
             define("DEFAULT_ROUTE", "User");
 
+            #Header configurations
+            define("ALLOW_ANY_API_ORIGIN", true);
+            define("ALLOWED_ORIGINS", []); #This is only required if the ALLOW_ANY_API_ORIGIN is false.
+
+            
+            #Define timezone
+            define("TIMESTAMP", "Y-m-d H:i:s");
+            define("CURRENT_TIMEZONE", "America/New_York");
+            date_default_timezone_set(CURRENT_TIMEZONE);
+
             define("PRODUCTION", false);
         }
     }

@@ -10,6 +10,9 @@
         
         public function inject(string $class) : mixed
         {
+
+            if($class == "string") return "";
+
             $dependencies = [];
 
             $ref = new ReflectionClass($class);         
