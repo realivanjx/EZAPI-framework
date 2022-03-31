@@ -7,7 +7,9 @@
             "Src\\": "src",
             "Core\\": "src/Core",
             "Models\\": "src/Models",
-            "Routes\\": "src/Routes"
+            "Routes\\": "src/Routes",
+            "Services\\": "src/Services",
+            "Repositories\\": "src/Repositories"
         }
     },
     "authors": [

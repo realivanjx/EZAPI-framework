@@ -1,9 +1,8 @@
 <?php
-    namespace Models;
+    namespace Services;
 
     interface IAuthService
     {
         public function authenticate(object $input) : string;
-        public function register(object $input) : string;
     }
 ?>
