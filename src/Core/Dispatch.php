@@ -2,6 +2,7 @@
     namespace Core;
     use Core\DI;
     use Src\Config;
+    use Core\Exceptions\ApiError;
     
 
     class Dispatch
@@ -61,8 +62,7 @@
             */
             if(!class_exists($route) || !method_exists($route, $method))
             {
-                 die("error 404");
-                //throw new ApiError(Dictionary::httpResponseCode[404]);
+               throw new ApiError(Dictionary::httpResponseCode[404], 404);
             }
 
              /**

@@ -155,7 +155,7 @@
          * @param mixed response
          * @throws Exceptions
          */
-        public function response(int $code, mixed $response) : void
+        public function response(mixed $response, int $code = 200) : void
         {
             #Validate response code
             if(!array_key_exists($code, Dictionary::httpResponseCode)) 
@@ -176,7 +176,14 @@
                         Constant::MESSAGE => $response
                     ]
                 ];
-            }            
+            }
+            
+            if($code == 200)
+            {
+                $response = [
+                    Constant::RESULT => $response
+                ];
+            }
 
             #Convert array to object
             $response = json_encode($response);            

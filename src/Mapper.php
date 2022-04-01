@@ -1,38 +1,21 @@
 <?php
     namespace Src;
-    
-    //No namespace needed in the root dir
 
-use Core\Database\Mysql\{IMysqlQuery, MysqlQuery};
-use Models\{
+    use Core\Database\Mysql\{IDatabase, Database};
+    use Repositories\{IUserAuthRepository, UserAuthRepository};
+
+    use Services\{
         IAuthService,
         AuthService
     };
 
-    enum InstanceType
-    {
-        case transient;
-        case request;
-        case singleton;
-    }
 
     class Mapper
     {
         public static $map = [
             IAuthService::class =>  AuthService::class,
-            IMysqlQuery::class => MysqlQuery::class
+            IUserAuthRepository::class => UserAuthRepository::class,
+            IDatabase::class => Database::class
         ];
 
-
-        //Test
-        public static $mapTest = [
-            IAuthService::class =>  [
-                AuthService::class,
-                InstanceType::transient
-            ]
-        ];
-
-
-        //This will hold the instantiated instances within the constructor
-        public static $instances = [];
     }

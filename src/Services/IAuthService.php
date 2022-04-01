@@ -3,6 +3,6 @@
 
     interface IAuthService
     {
-        public function authenticate(object $input) : string;
+        public function authenticate(string $usernameOrEmail, string $password, bool $rememberMe) : object;
     }
 ?>

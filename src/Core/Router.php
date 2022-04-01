@@ -4,15 +4,22 @@
   
   class Router 
   {
-    public $request;
+    public IRequest $request;
 
-    public function __construct(IRequest $request) 
+    public function __construct() 
     {
-      $this->request = $request;
+      //Get from singleton later
+      $this->request = new Request();
+
+    }
+
+    public function request()
+    {
+      return $this->request;
     }
 
     public function __destruct()
     {
-      $this->request = null;
+      //$this->request = null;
     }
   }

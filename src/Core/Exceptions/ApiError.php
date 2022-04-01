@@ -1,7 +1,6 @@
 <?php
     namespace Core\Exceptions;
-    use Core\Dictionary;
-    use Core\Constant;
+    use Core\{Dictionary, Constant};
     use \Exception;
 
     class ApiError extends ExceptionHandler

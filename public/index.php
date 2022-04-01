@@ -3,7 +3,7 @@
     use \Exception;
     use \TypeError;
     use Core\Dispatch;
-  
+    use Core\Exceptions\Error;
 
     /**
     *################################
@@ -61,16 +61,14 @@
             });
         }
 
-        //run middleware before dispatching
-
         #Dispatch request
         (new Dispatch)->request();
     }
     catch(Exception $ex)
     {
-        print_r($ex);
+        Error::handler($ex);
     }
     catch(TypeError $ex)
     {
-        print_r($ex);
+        Error::handler($ex);
     }

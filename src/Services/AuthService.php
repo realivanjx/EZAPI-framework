@@ -1,40 +1,50 @@
 <?php
   namespace Services;
   use Core\Exceptions\ApiError;
-  use Core\Service;
-use Models\User;
-use Repositories\IUserRepository;
+  use Models\User;
+  use Repositories\IUserAuthRepository;
   
     
-  class AuthService extends Service implements IAuthService
+  class AuthService implements IAuthService
   {
-    protected $_user;
+    protected IUserAuthRepository $m_authRepository;
+    protected User $m_user;
 
-    public function __construct(IUserRepository $userRepository)
+    public function __construct(IUserAuthRepository $authRepository)
     {
-      $this->_user = $userRepository;
+      $this->m_authRepository = $authRepository;
     }
 
-    public function authenticate(object $input) : string
+    
+    public function authenticate(string $usernameOrEmail, string $password, bool $rememberMe) : object
     {
-      if(empty($input->usernameOrEmail))
+      #Check whether the user entered a valid email otherwise treat it as an username
+      $identifier = filter_var($usernameOrEmail, FILTER_VALIDATE_EMAIL) ? "email" : "username";
+      
+      #Attempt to find the user in the database with the username or email provided
+      $this->m_user = $this->m_authRepository->findFirst($identifier, $usernameOrEmail);     
+
+      #User not found
+      if(empty($this->m_user->id) || !password_verify($password, $this->m_user->password))
       {
-        throw new ApiError("Username or email is required");
+        throw new ApiError("invalid_username_email_or_password");
       }
 
-      if(empty($input->password))
-      {
-        throw new ApiError("password or email is required");
-      }
+      // if($this->m_user->status == "banned")
+      // {
+      //   throw new ApiError ("account_banned");
+      // }
+
+      // if($this->m_user->status == "inactive")
+      // {
+      //   throw new ApiError ("account_inactive");
+      // }
+
+      //remove password field
+      unset($this->m_user->password);
 
 
-      $user = new User();
-      $user->email = "test";
-      $user->password = "test";
-
-      $this->_user->add($user);
-
-      return "Hello from the user model login function";
+      return $this->m_user;
     }
 
    

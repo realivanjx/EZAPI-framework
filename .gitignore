@@ -1,6 +1,5 @@
 # Ignore
-.env.development
-.env.production
+.env
 notes
 composer.lock
 /vendor/

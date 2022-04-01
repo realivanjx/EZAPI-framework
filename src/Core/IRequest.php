@@ -5,6 +5,6 @@
     {
         function data() : mixed;
         
-        function response(int $code, mixed $response) : void;
+        function response(mixed $response, int $code = 200) : void;
     }
 ?>

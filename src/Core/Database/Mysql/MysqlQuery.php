@@ -2,7 +2,7 @@
     namespace Core\Database\Mysql;
     use Core\Constant;
 
-    class MysqlQuery extends Mysql implements IMysqlQuery
+    class MysqlQuery extends Mysql
     {
         public array $modelVariables = [];
 

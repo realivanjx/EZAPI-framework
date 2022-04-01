@@ -11,12 +11,8 @@
          */
         public function load(bool $isProduction) : void
         {
-            #use the production .env by default.
-            $fileName = $isProduction ? ".env.production" : ".env.development";
-
             #Open the .env file and read it
-            $filePath = sprintf("%s%s%s", ROOT_DIR, SLASH, $fileName);
-
+            $filePath = sprintf("%s%s.env", ROOT_DIR, SLASH);
             
             #Recreate the files if they don't exists
             if(!file_exists($filePath))
@@ -85,7 +81,7 @@
           
                     if ($value === false) 
                     {
-                        return "Invalid env key provided";
+                        return "Invalid env key";
                     }
           
                     return $value;
