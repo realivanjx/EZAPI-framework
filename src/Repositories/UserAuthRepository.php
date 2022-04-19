@@ -1,35 +1,23 @@
 <?php
-    namespace Repositories;
-    use Core\Database\Mysql\IDatabase;
-    use Models\User;
+
+namespace Repositories;
+
+use Exception;
+use Models\User;
 
 
-    class UserAuthRepository implements IUserAuthRepository
+class UserAuthRepository implements IUserAuthRepository
+{
+    public function getUserByEmail(string $email): User
     {
-        protected IDatabase $db;
-        private const COLUMN_NAME = "user";
-
-        public function __construct(IDatabase $db)
-        {
-            $this->db = $db;
-        }
-
-
-        function findFirst(string $identifier, string $key) : User
-        {
-            return new User;
-        }
-
-        /**
-         * @method findFIrst
-         * @param array  ex: ["id" => "value"]
-         * @return object
-         */
-        public function findFirsts(array $identifier, string $key) : User
-        {
-           return new user;
-        }
+        throw new Exception("not implemented");
     }
+
+    public function getUserByUsername(string $username): User
+    {
+        throw new Exception("not implemented");
+    }
+}
 
 
 
