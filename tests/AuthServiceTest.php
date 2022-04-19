@@ -25,7 +25,7 @@ class AuthServiceTest extends TestCase
     {
         // Auth repository.
         $getUserCount = 0;
-        $this->authRepository->getUserByEmailCallback = function($email) use ($getUserCount)
+        $this->authRepository->getUserByEmailCallback = function($email) use (&$getUserCount)
         {
             assertEquals("john@mail.com", $email);
             $getUserCount += 1;
