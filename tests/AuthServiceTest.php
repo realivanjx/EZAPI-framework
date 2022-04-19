@@ -6,6 +6,8 @@ use Services;
 use Models\User;
 use Services\AuthService;
 
+use function PHPUnit\Framework\assertEquals;
+
 class AuthServiceTest extends TestCase
 {
     private FakeUserAuthRepository $authRepository;
@@ -23,9 +25,9 @@ class AuthServiceTest extends TestCase
     {
         // Auth repository.
         $getUserCount = 0;
-        $this->authRepository->getUserByEmailCallback = function($email, &$getUserCount)
+        $this->authRepository->getUserByEmailCallback = function($email) use ($getUserCount)
         {
-            assert("john@mail.com", $email);
+            assertEquals("john@mail.com", $email);
             $getUserCount += 1;
             $user = new User();
             $user->username = "test";
@@ -36,8 +38,8 @@ class AuthServiceTest extends TestCase
         $result = $this->service->authenticate("john@mail.com", "12345", true);
 
         // Assert.
-        assert(1, $getUserCount);
-        assert("test", $result->username);
+        assertEquals(1, $getUserCount);
+        assertEquals("test", $result->username);
     }
 }
 
