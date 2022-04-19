@@ -1,12 +1,14 @@
 <?php
 
 namespace Tests;
+
+use Exception;
 use PHPUnit\Framework\TestCase;
-use Services;
 use Models\User;
 use Services\AuthService;
 
 use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertTrue;
 
 class AuthServiceTest extends TestCase
 {
@@ -69,6 +71,43 @@ class AuthServiceTest extends TestCase
         assertEquals(1, $getUserEmailCount);
         assertEquals(1, $getUserUsernameCount);
         assertEquals("test", $result->username);
+    }
+
+    public function testAuthenticateUserNotFound()
+    {
+        // Auth repository.
+        $getUserEmailCount = 0;
+        $this->authRepository->getUserByEmailCallback = function($email) use (&$getUserEmailCount)
+        {
+            assertEquals("john", $email);
+            $getUserEmailCount += 1;
+            return null;
+        };
+        $getUserUsernameCount = 0;
+        $this->authRepository->getUserByUsernameCallback = function($username) use (&$getUserUsernameCount)
+        {
+            assertEquals("john", $username);
+            $getUserUsernameCount += 1;
+            return null;
+        };
+
+        // Test.
+        $error = false;
+
+        try
+        {
+            $this->service->authenticate("john", "12345", true);
+        }
+        catch (Exception $ex)
+        {
+            assertEquals("user_not_found", $ex->getMessage());
+            $error = true;
+        }
+
+        // Assert.
+        assertTrue($error);
+        assertEquals(1, $getUserEmailCount);
+        assertEquals(1, $getUserUsernameCount);
     }
 }
 
