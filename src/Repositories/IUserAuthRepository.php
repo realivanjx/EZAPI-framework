@@ -4,6 +4,6 @@
 
     interface IUserAuthRepository
     {
-        function getUserByUsername(string $username) : User;
-        function getUserByEmail(string $email) : User;
+        function getUserByUsername(string $username) : ?User;
+        function getUserByEmail(string $email) : ?User;
     }

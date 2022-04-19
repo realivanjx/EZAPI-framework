@@ -41,6 +41,35 @@ class AuthServiceTest extends TestCase
         assertEquals(1, $getUserCount);
         assertEquals("test", $result->username);
     }
+
+    public function testAuthenticateWithUsername() : void
+    {
+        // Auth repository.
+        $getUserEmailCount = 0;
+        $this->authRepository->getUserByEmailCallback = function($email) use (&$getUserEmailCount)
+        {
+            assertEquals("john", $email);
+            $getUserEmailCount += 1;
+            return null;
+        };
+        $getUserUsernameCount = 0;
+        $this->authRepository->getUserByUsernameCallback = function($username) use (&$getUserUsernameCount)
+        {
+            assertEquals("john", $username);
+            $getUserUsernameCount += 1;
+            $user = new User();
+            $user->username = "test";
+            return $user;
+        };
+
+        // Test.
+        $result = $this->service->authenticate("john", "12345", true);
+
+        // Assert.
+        assertEquals(1, $getUserEmailCount);
+        assertEquals(1, $getUserUsernameCount);
+        assertEquals("test", $result->username);
+    }
 }
 
 ?>

@@ -21,6 +21,18 @@ class AuthService implements IAuthService
 
     public function authenticate(string $usernameOrEmail, string $password, bool $rememberMe): User
     {
-        return $this->m_authRepository->getUserByEmail($usernameOrEmail);
+        $user = $this->m_authRepository->getUserByEmail($usernameOrEmail);
+
+        if ($user == null)
+        {
+            $user = $this->m_authRepository->getUserByUsername($usernameOrEmail);
+
+            if ($user == null)
+            {
+                throw new Exception("user_not_found");
+            }
+        }
+
+        return $user;
     }
 }
